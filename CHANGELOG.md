@@ -5,6 +5,51 @@ All notable changes to Loa will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.10.1] - 2026-01-04
+
+### Why This Release
+
+This release adds the **Loa Constructs CLI** - a command-line interface for installing packs and skills from the Loa Constructs Registry. Pack commands are now automatically symlinked to `.claude/commands/` after installation, making them immediately available.
+
+### Added
+
+- **`constructs-install.sh`** - New CLI for pack and skill installation
+  ```bash
+  constructs-install.sh pack <slug>              # Install pack from registry
+  constructs-install.sh skill <vendor/slug>      # Install individual skill
+  constructs-install.sh uninstall pack <slug>    # Remove a pack
+  constructs-install.sh uninstall skill <slug>   # Remove a skill
+  constructs-install.sh link-commands <slug|all> # Re-link pack commands
+  ```
+
+- **Automatic Command Symlinking** (Fixes #21)
+  - Pack commands in `.claude/constructs/packs/{slug}/commands/` are automatically symlinked to `.claude/commands/`
+  - User files are never overwritten (safety feature)
+  - Existing pack symlinks are updated on reinstall
+
+- **Skill Symlinking for Loader Discovery**
+  - Pack skills symlinked to `.claude/constructs/skills/{pack}/` for loader compatibility
+
+- **Comprehensive Test Suite**
+  - 21 unit tests covering installation, symlinking, uninstall, and edge cases
+
+### Fixed
+
+- **#20**: Add CLI install command for Loa Constructs packs
+- **#21**: Pack commands not automatically available after installation
+
+### Directory Structure Update
+
+```
+.claude/constructs/packs/{slug}/
+├── commands/           # Pack commands (auto-symlinked to .claude/commands/)
+├── skills/             # Pack skills (auto-symlinked to .claude/constructs/skills/)
+├── manifest.json       # Pack metadata
+└── .license.json       # JWT license token
+```
+
+---
+
 ## [0.10.0] - 2026-01-03
 
 ### Why This Release
