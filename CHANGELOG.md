@@ -5,6 +5,14 @@ All notable changes to Loa will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.1] - 2026-01-20 — br Permissions
+
+### Added
+
+- **Pre-approved `br` commands** in `.claude/settings.json`
+  - 17 command patterns: `br:*`, `br create:*`, `br list:*`, `br show:*`, `br update:*`, `br close:*`, `br sync:*`, `br ready:*`, `br dep:*`, `br blocked:*`, `br stats:*`, `br doctor:*`, `br prime:*`, `br init:*`, `br search:*`, `br import:*`, `br export:*`
+  - All beads_rust CLI commands now work without permission prompts
+
 ## [1.1.0] - 2026-01-20 — beads_rust Migration
 
 ### Why This Release
