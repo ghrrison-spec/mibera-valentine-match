@@ -5,6 +5,21 @@ All notable changes to Loa will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.9.1] - 2026-01-29 — Memory Stack Patch
+
+### Fixed
+
+- **Venv Python Support** - Memory Stack now works with externally-managed Python environments (PEP 668)
+  - `memory-admin.sh` and `memory-setup.sh` auto-detect `.loa/venv/bin/python3`
+  - Fixes compatibility with modern Debian/Ubuntu systems that block system-wide pip installs
+
+### Documentation
+
+- Added resource requirements warning for Memory Stack (2-3 GB disk, ~500 MB RAM)
+- Added links to [sentence-transformers](https://github.com/UKPLab/sentence-transformers) repository and documentation
+
+---
+
 ## [1.9.0] - 2026-01-29 — Claude Code 2.1.x Feature Adoption
 
 ### Why This Release

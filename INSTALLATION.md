@@ -90,7 +90,7 @@ br init
 
 #### Memory Stack (Vector Database) {#memory-stack-optional}
 
-**What it does**: SQLite vector database with sentence-transformers embeddings for mid-stream semantic memory recall during Claude Code sessions.
+**What it does**: SQLite vector database with [sentence-transformers](https://github.com/UKPLab/sentence-transformers) embeddings for mid-stream semantic memory recall during Claude Code sessions.
 
 **Benefits**:
 - **Semantic grounding**: Recall relevant learnings during tool execution
@@ -99,9 +99,15 @@ br init
 
 **Without Memory Stack**: Loa works normally using NOTES.md for structured memory. The Memory Stack adds semantic recall.
 
+**Resource Requirements**:
+> ⚠️ **Warning**: sentence-transformers requires significant disk space and memory.
+> - **Disk**: ~2-3 GB for dependencies (PyTorch, transformers, model weights)
+> - **RAM**: ~500 MB when embedding (model loaded into memory)
+> - **First run**: Downloads ~90 MB model (`all-MiniLM-L6-v2`) to `~/.cache/sentence_transformers/`
+
 **Prerequisites**:
 - Python 3.8+ with pip
-- sentence-transformers (`pip install sentence-transformers`)
+- sentence-transformers ([GitHub](https://github.com/UKPLab/sentence-transformers) | [Docs](https://www.sbert.net/))
 
 **Installation**:
 
