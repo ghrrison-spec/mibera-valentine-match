@@ -5,6 +5,99 @@ All notable changes to Loa will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.12.0] - 2026-02-01 — Oracle Compound Learnings
+
+### Why This Release
+
+Loa now **learns from itself**. The Oracle system has been extended to query Loa's own compound learnings alongside Anthropic documentation. This implements the recursive improvement loop: Executions → Feedback → Oracle → Skills → Executions.
+
+*"Loa should be its own oracle—teaching other agent systems how to improve based on what worked here."*
+
+### Added
+
+#### Oracle Compound Learnings (#89, #76)
+
+Extend the oracle system to query Loa's own accumulated knowledge with hierarchical source weighting.
+
+- **`query` Command** - New oracle action with scope parameter:
+  ```bash
+  # Query Loa learnings only
+  .claude/scripts/anthropic-oracle.sh query "auth token" --scope loa
+
+  # Query Anthropic docs only
+  .claude/scripts/anthropic-oracle.sh query "hooks" --scope anthropic
+
+  # Query all sources with weighted ranking
+  .claude/scripts/anthropic-oracle.sh query "patterns" --scope all
+  ```
+
+- **Hierarchical Source Weighting**:
+  | Source | Weight | Description |
+  |--------|--------|-------------|
+  | Loa Learnings | 1.0 | Skills, feedback, decisions from this repo |
+  | Anthropic Docs | 0.8 | Official Claude best practices |
+  | Community | 0.5 | External contributions |
+
+- **Loa Sources Indexed**:
+  - Skills: `.claude/skills/**/*.md`
+  - Feedback: `grimoires/loa/feedback/*.yaml`
+  - Decisions: `grimoires/loa/decisions.yaml`
+  - Learnings: `grimoires/loa/a2a/compound/learnings.json`
+
+- **`loa-learnings-index.sh`** - New indexing script (949 lines):
+  ```bash
+  # Build/update Loa learnings index
+  .claude/scripts/loa-learnings-index.sh index
+
+  # Query indexed learnings
+  .claude/scripts/loa-learnings-index.sh query "pattern"
+
+  # Show index status
+  .claude/scripts/loa-learnings-index.sh status
+  ```
+
+- **QMD Integration** - Semantic search with grep fallback:
+  - Uses QMD when available for semantic queries
+  - Falls back to grep-based keyword search
+  - Configurable via `.loa.config.yaml`
+
+- **Effectiveness Tracking** - Track learning application:
+  ```bash
+  # Track that a learning was applied
+  .claude/scripts/anthropic-oracle.sh query "pattern" --track
+  ```
+
+- **Configuration** (`.loa.config.yaml`):
+  ```yaml
+  oracle:
+    compound_learnings:
+      enabled: true
+      default_scope: "all"
+      source_weights:
+        loa_learnings: 1.0
+        anthropic_docs: 0.8
+        community: 0.5
+      index_paths:
+        skills: ".claude/skills/**/*.md"
+        feedback: "grimoires/loa/feedback/*.yaml"
+        decisions: "grimoires/loa/decisions.yaml"
+  ```
+
+- **Updated Files**:
+  - `.claude/commands/oracle-analyze.md` - Extended with query documentation
+  - `.claude/schemas/learnings.schema.json` - Expanded schema
+  - `grimoires/loa/feedback/README.md` - Feedback directory documentation
+
+### Documentation
+
+- **CLAUDE.md** - Added Oracle Compound Learnings section with:
+  - Query command usage
+  - Source weighting table
+  - Index management
+  - Configuration reference
+
+---
+
 ## [1.11.0] - 2026-02-01 — Autonomous Agents & Developer Experience
 
 ### Why This Release

@@ -1,8 +1,8 @@
 # Loa
 
-[![Version](https://img.shields.io/badge/version-1.11.0-blue.svg)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-1.12.0-blue.svg)](CHANGELOG.md)
 [![License](https://img.shields.io/badge/license-AGPL--3.0-green.svg)](LICENSE.md)
-[![Release](https://img.shields.io/badge/release-Autonomous%20Agents-purple.svg)](CHANGELOG.md#1110---2026-02-01--autonomous-agents--developer-experience)
+[![Release](https://img.shields.io/badge/release-Oracle%20Compound%20Learnings-purple.svg)](CHANGELOG.md#1120---2026-02-01--oracle-compound-learnings)
 
 > *"The Loa are pragmatic entities... They're not worshipped for salvation—they're worked with for practical results."*
 
@@ -69,7 +69,8 @@ Loa uses a **three-zone model** inspired by AWS Projen and Google's ADK:
 
 | Feature | Description | Documentation |
 |---------|-------------|---------------|
-| **Smart Feedback Routing** | Auto-route feedback to correct ecosystem repo | [CHANGELOG.md](CHANGELOG.md#1110---2026-02-01--smart-feedback-routing--developer-experience) |
+| **Oracle Compound Learnings** | Query Loa's own knowledge with weighted sources | [CHANGELOG.md](CHANGELOG.md#1120---2026-02-01--oracle-compound-learnings) |
+| **Smart Feedback Routing** | Auto-route feedback to correct ecosystem repo | [CHANGELOG.md](CHANGELOG.md#1110---2026-02-01--autonomous-agents--developer-experience) |
 | **WIP Branch Testing** | Test Loa feature branches before merging | [CHANGELOG.md](CHANGELOG.md#1110---2026-02-01--smart-feedback-routing--developer-experience) |
 | **Compound Learning** | Cross-session pattern detection + feedback loop | [CHANGELOG.md](CHANGELOG.md#1100---2026-01-30--compound-learning--visual-communication) |
 | **Visual Communication** | Beautiful Mermaid diagram rendering | [CLAUDE.md](CLAUDE.md#visual-communication) |
