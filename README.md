@@ -15,7 +15,9 @@ Version: 1.31.0
 
 > *"The Loa are pragmatic entities... They're not worshipped for salvation—they're worked with for practical results."*
 
-**Run Mode AI** — Agent-driven development framework with 17 specialized AI skills orchestrating the complete product lifecycle. From requirements through production deployment.
+## Why "Loa"?
+
+In William Gibson's Sprawl trilogy, Loa are AI entities that "ride" humans through neural interfaces. These agents don't replace you—they **ride with you**, channeling expertise through the interface.
 
 ## Quick Start (~2 minutes)
 
@@ -157,10 +159,6 @@ Loa uses a **three-zone model** inspired by AWS Projen and Google's ADK:
 | **[PROCESS.md](PROCESS.md)** | Complete workflow, agents, commands, protocols |
 | **[CLAUDE.md](CLAUDE.md)** | Technical reference for Claude Code |
 | **[CHANGELOG.md](CHANGELOG.md)** | Version history |
-
-## Why "Loa"?
-
-In William Gibson's Sprawl trilogy, Loa are AI entities that "ride" humans through neural interfaces. These agents don't replace you—they **ride with you**, channeling expertise through the interface.
 
 ## License
 
