@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # bridge-github-trail.sh - GitHub interactions for bridge loop
-# Version: 1.0.0
+# Version: 2.0.0
 #
 # Handles PR comments, PR body updates, and vision link posting
 # for each bridge iteration. Gracefully degrades when gh is unavailable.
@@ -72,6 +72,189 @@ check_gh() {
 }
 
 # =============================================================================
+# Redaction (SDD 3.5.2, Flatline SKP-006)
+# =============================================================================
+
+# Gitleaks-inspired patterns for realistic secret detection
+# Each pattern: name|regex
+REDACT_PATTERNS=(
+  'aws_access_key|AKIA[0-9A-Z]{16}'
+  'github_pat|ghp_[A-Za-z0-9]{36}'
+  'github_oauth|gho_[A-Za-z0-9]{36}'
+  'github_app|ghs_[A-Za-z0-9]{36}'
+  'github_refresh|ghr_[A-Za-z0-9]{36}'
+  'jwt_token|eyJ[A-Za-z0-9_-]{20,}\.[A-Za-z0-9_-]{20,}\.[A-Za-z0-9_-]{20,}'
+  'generic_secret|(api_key|api_secret|apikey|secret_key|access_token|auth_token|private_key)[[:space:]]*[=:][[:space:]]*["'"'"'][A-Za-z0-9+/=_-]{16,}'
+)
+
+# Allowlist patterns — known-safe strings that match redaction patterns
+# These are checked BEFORE redaction to avoid false positives
+ALLOWLIST_PATTERNS=(
+  'sha256:[a-f0-9]{64}'
+  'hash:[[:space:]]*[a-f0-9]{64}'
+  '<!-- @[a-z-]*:[^>]*hash:[a-f0-9]'
+  'https://mermaid\.ink/img/[A-Za-z0-9+/=_-]+'
+  'data:image/[a-z]+;base64,'
+)
+
+# Redact security content from a string
+# Reads from stdin, writes redacted content to stdout
+# Returns 0 always (redaction is best-effort)
+redact_security_content() {
+  local content
+  content=$(cat; echo x)
+  content="${content%x}"
+
+  # Protect allowlisted content with sentinel tokens before redaction
+  local sentinel_idx=0
+  declare -A sentinel_map
+  for pattern in "${ALLOWLIST_PATTERNS[@]}"; do
+    while IFS= read -r match; do
+      if [[ -n "$match" ]]; then
+        local sentinel="__ALLOWLIST_SENTINEL_${sentinel_idx}__"
+        sentinel_map["$sentinel"]="$match"
+        content="${content//$match/$sentinel}"
+        sentinel_idx=$((sentinel_idx + 1))
+      fi
+    done < <(printf '%s' "$content" | grep -oE "$pattern" 2>/dev/null || true)
+  done
+
+  # Build combined sed expression for all redaction patterns (single invocation)
+  local sed_expr=""
+  for entry in "${REDACT_PATTERNS[@]}"; do
+    local name="${entry%%|*}"
+    local regex="${entry#*|}"
+    sed_expr="${sed_expr}s/${regex}/[REDACTED:${name}]/g;"
+  done
+
+  if [[ -n "$sed_expr" ]]; then
+    content=$(printf '%s' "$content" | sed -E "$sed_expr" 2>/dev/null || printf '%s' "$content")
+  fi
+
+  # Restore allowlisted content from sentinels
+  for sentinel in "${!sentinel_map[@]}"; do
+    content="${content//$sentinel/${sentinel_map[$sentinel]}}"
+  done
+
+  printf '%s' "$content"
+}
+
+# Post-redaction safety check (Flatline SKP-006)
+# Scans for known secret prefixes that should have been caught
+# Returns 0 if safe, 1 if secrets detected (blocks posting)
+post_redaction_safety_check() {
+  local content="$1"
+  local unsafe_patterns='(ghp_[A-Za-z0-9]{4}|gho_[A-Za-z0-9]{4}|ghs_[A-Za-z0-9]{4}|ghr_[A-Za-z0-9]{4}|AKIA[0-9A-Z]{4}|eyJ[A-Za-z0-9_-]{8,}\.eyJ)'
+
+  local line_num=0
+  local found=false
+  while IFS= read -r line; do
+    line_num=$((line_num + 1))
+    if printf '%s' "$line" | grep -qE "$unsafe_patterns" 2>/dev/null; then
+      echo "SECURITY: Post-redaction safety check FAILED at line $line_num" >&2
+      found=true
+    fi
+  done <<< "$content"
+
+  if [[ "$found" == "true" ]]; then
+    echo "SECURITY: Blocking PR comment — unredacted secrets detected after redaction pass" >&2
+    return 1
+  fi
+  return 0
+}
+
+# =============================================================================
+# Size Enforcement (SDD 3.5.1)
+# =============================================================================
+
+# Size limits in bytes
+SIZE_LIMIT_TRUNCATE=66560    # 65KB - truncate preserving findings JSON
+SIZE_LIMIT_FINDINGS_ONLY=262144  # 256KB - findings-only fallback
+
+# Save full review to .run/ with restricted permissions (Flatline SKP-009)
+save_full_review() {
+  local bridge_id="$1" iteration="$2" content="$3"
+  local review_dir="${PROJECT_ROOT:-.}/.run/bridge-reviews"
+  mkdir -p "$review_dir"
+  local review_file="${review_dir}/${bridge_id}-iter${iteration}-full.md"
+  printf '%s' "$content" > "$review_file"
+  chmod 0600 "$review_file"
+  echo "Full review saved to $review_file" >&2
+}
+
+# Enforce size limits on comment body
+# Reads full body from stdin, writes enforced body to stdout
+# Args: $1 = truncation strategy ("truncate" or "findings-only")
+enforce_size_limit() {
+  local content
+  content=$(cat; echo x)
+  content="${content%x}"
+  local size=${#content}
+
+  if [[ "$size" -le "$SIZE_LIMIT_TRUNCATE" ]]; then
+    printf '%s' "$content"
+    return 0
+  fi
+
+  # Extract findings block once for reuse in all size branches
+  local findings_block=""
+  findings_block=$(printf '%s' "$content" | sed -n '/<!-- bridge-findings-start -->/,/<!-- bridge-findings-end -->/p' 2>/dev/null || true)
+
+  if [[ "$size" -gt "$SIZE_LIMIT_FINDINGS_ONLY" ]]; then
+    # 256KB emergency fallback — findings-only
+    if [[ -n "$findings_block" ]]; then
+      echo "WARNING: Review exceeds 256KB ($size bytes) — posting findings-only" >&2
+      printf '%s' "$findings_block"
+      return 0
+    fi
+    # No findings block found — truncate instead
+    echo "WARNING: Review exceeds 256KB ($size bytes) but no findings block found — truncating" >&2
+  else
+    echo "WARNING: Review exceeds 65KB ($size bytes) — truncating with findings preserved" >&2
+  fi
+
+  if [[ -n "$findings_block" ]]; then
+    # Calculate how much prose we can keep
+    local findings_size=${#findings_block}
+    local budget=$((SIZE_LIMIT_TRUNCATE - findings_size - 200))  # 200 bytes for truncation notice
+    if [[ "$budget" -lt 500 ]]; then
+      budget=500
+    fi
+    # Take prose before findings block, truncate, append findings
+    local before_findings
+    before_findings=$(printf '%s' "$content" | sed '/<!-- bridge-findings-start -->/,$d' 2>/dev/null || true)
+    local truncated_prose="${before_findings:0:$budget}"
+    printf '%s\n\n> **Note**: Review truncated from %d bytes to fit 65KB limit. Full review saved to .run/\n\n%s' \
+      "$truncated_prose" "$size" "$findings_block"
+  else
+    # No findings block — simple truncation
+    local budget=$((SIZE_LIMIT_TRUNCATE - 100))
+    printf '%s\n\n> **Note**: Review truncated from %d bytes to fit 65KB limit. Full review saved to .run/' \
+      "${content:0:$budget}" "$size"
+  fi
+}
+
+# =============================================================================
+# Retention Policy (Flatline SKP-009)
+# =============================================================================
+
+# Clean up bridge reviews older than 30 days
+cleanup_old_reviews() {
+  local review_dir="${PROJECT_ROOT:-.}/.run/bridge-reviews"
+  if [[ ! -d "$review_dir" ]]; then
+    return 0
+  fi
+  local deleted=0
+  while IFS= read -r -d '' file; do
+    rm -f "$file"
+    deleted=$((deleted + 1))
+  done < <(find "$review_dir" -name "*.md" -mtime +30 -print0 2>/dev/null)
+  if [[ "$deleted" -gt 0 ]]; then
+    echo "Cleaned up $deleted bridge reviews older than 30 days" >&2
+  fi
+}
+
+# =============================================================================
 # comment subcommand
 # =============================================================================
 
@@ -103,7 +286,8 @@ cmd_comment() {
   # Build comment with dedup marker
   local marker="<!-- bridge-iteration: ${bridge_id}:${iteration} -->"
   local review_content
-  review_content=$(cat "$review_body")
+  review_content=$(cat "$review_body"; echo x)
+  review_content="${review_content%x}"
   local body="${marker}
 ## Bridge Review — Iteration ${iteration}
 
@@ -114,16 +298,31 @@ ${review_content}
 ---
 *Bridge iteration ${iteration} of ${bridge_id}*"
 
+  # Always save full review before any transformation (Flatline SKP-009)
+  save_full_review "$bridge_id" "$iteration" "$body"
+
+  # Redact security content (SDD 3.5.2, Flatline SKP-006)
+  body=$(printf '%s' "$body" | redact_security_content)
+
+  # Post-redaction safety check — block posting if secrets remain
+  if ! post_redaction_safety_check "$body"; then
+    echo "ERROR: Comment blocked by post-redaction safety check for iteration $iteration on PR #$pr" >&2
+    return 0
+  fi
+
+  # Enforce size limits (SDD 3.5.1)
+  body=$(printf '%s' "$body" | enforce_size_limit)
+
   # Check for existing comment with this marker to avoid duplicates
   local existing
-  existing=$(gh pr view "$pr" --json comments --jq ".comments[].body" 2>/dev/null | grep -c "$marker" || true)
+  existing=$(gh pr view "$pr" --json comments --jq "[.comments[].body | select(contains(\"$marker\"))] | length" 2>/dev/null || echo "0")
 
   if [[ "$existing" -gt 0 ]]; then
     echo "Skipping: comment for iteration $iteration already exists on PR #$pr"
     return 0
   fi
 
-  echo "$body" | gh pr comment "$pr" --body-file - 2>/dev/null || {
+  printf '%s' "$body" | gh pr comment "$pr" --body-file - 2>/dev/null || {
     echo "WARNING: Failed to post comment to PR #$pr" >&2
     return 0
   }
@@ -164,41 +363,32 @@ cmd_update_pr() {
   depth=$(jq '.config.depth' "$state_file")
   state=$(jq -r '.state' "$state_file")
 
-  local nl=$'\n'
-  local table_header="## Bridge Loop Summary${nl}${nl}| Iter | State | Score | Visions | Source |${nl}|------|-------|-------|---------|--------|"
-  local table_rows=""
+  # Build iteration table rows using single jq invocation
+  local table_rows
+  table_rows=$(jq -r '.iterations[] | "| \(.iteration) | \(.state) | \(.bridgebuilder.severity_weighted_score // "—") | \(.visions_captured // "—") | \(.sprint_plan_source // "existing") |"' "$state_file" 2>/dev/null || true)
 
-  local iter_count
-  iter_count=$(jq '.iterations | length' "$state_file")
-
-  local i
-  for ((i = 0; i < iter_count; i++)); do
-    local iter_num iter_state source
-    iter_num=$(jq ".iterations[$i].iteration" "$state_file")
-    iter_state=$(jq -r ".iterations[$i].state" "$state_file")
-    source=$(jq -r ".iterations[$i].sprint_plan_source // \"existing\"" "$state_file")
-    table_rows="${table_rows}${nl}| ${iter_num} | ${iter_state} | — | — | ${source} |"
-  done
-
-  # Build flatline info
-  local flatline_info=""
   local flatline_status
   flatline_status=$(jq -r '.flatline.consecutive_below_threshold // 0' "$state_file")
-  if [[ "$flatline_status" -gt 0 ]]; then
-    flatline_info="${nl}${nl}**Flatline**: ${flatline_status} consecutive iterations below threshold"
-  fi
 
-  # Metrics
-  local metrics_info=""
   local total_sprints total_files total_findings total_visions
   total_sprints=$(jq '.metrics.total_sprints_executed // 0' "$state_file")
   total_files=$(jq '.metrics.total_files_changed // 0' "$state_file")
   total_findings=$(jq '.metrics.total_findings_addressed // 0' "$state_file")
   total_visions=$(jq '.metrics.total_visions_captured // 0' "$state_file")
-  metrics_info="${nl}${nl}**Metrics**: ${total_sprints} sprints, ${total_files} files changed, ${total_findings} findings addressed, ${total_visions} visions captured"
 
+  # Build body using printf for readable template
   local body
-  body="${table_header}${table_rows}${flatline_info}${metrics_info}${nl}${nl}**Bridge ID**: \`${bridge_id}\` | **State**: ${state} | **Depth**: ${depth}${nl}<!-- bridge-summary-end -->"
+  body=$(printf '## Bridge Loop Summary\n\n| Iter | State | Score | Visions | Source |\n|------|-------|-------|---------|--------|\n%s' "$table_rows")
+
+  if [[ "$flatline_status" -gt 0 ]]; then
+    body=$(printf '%s\n\n**Flatline**: %s consecutive iterations below threshold' "$body" "$flatline_status")
+  fi
+
+  body=$(printf '%s\n\n**Metrics**: %s sprints, %s files changed, %s findings addressed, %s visions captured' \
+    "$body" "$total_sprints" "$total_files" "$total_findings" "$total_visions")
+
+  body=$(printf '%s\n\n**Bridge ID**: `%s` | **State**: %s | **Depth**: %s\n<!-- bridge-summary-end -->' \
+    "$body" "$bridge_id" "$state" "$depth")
 
   # Get current PR body and append/update bridge section
   local current_body
@@ -214,7 +404,7 @@ cmd_update_pr() {
     fi
     new_body="${new_body}${body}"
   else
-    new_body="${current_body}${nl}${nl}---${nl}${nl}${body}"
+    new_body=$(printf '%s\n\n---\n\n%s' "$current_body" "$body")
   fi
 
   printf '%s' "$new_body" | gh pr edit "$pr" --body-file - 2>/dev/null || {
@@ -249,18 +439,14 @@ cmd_vision() {
   check_gh || return 0
 
   local body
-  body=$(cat <<EOF
-<!-- bridge-vision: ${vision_id} -->
-### Vision Captured: ${title}
+  body=$(printf '%s\n%s\n\n%s\n%s\n\n%s' \
+    "<!-- bridge-vision: ${vision_id} -->" \
+    "### Vision Captured: ${title}" \
+    "**Vision ID**: \`${vision_id}\`" \
+    "**Entry**: \`grimoires/loa/visions/entries/${vision_id}.md\`" \
+    "> This vision was captured during a bridge iteration. See the vision registry for details.")
 
-**Vision ID**: \`${vision_id}\`
-**Entry**: \`grimoires/loa/visions/entries/${vision_id}.md\`
-
-> This vision was captured during a bridge iteration. See the vision registry for details.
-EOF
-)
-
-  echo "$body" | gh pr comment "$pr" --body-file - 2>/dev/null || {
+  printf '%s' "$body" | gh pr comment "$pr" --body-file - 2>/dev/null || {
     echo "WARNING: Failed to post vision link to PR #$pr" >&2
     return 0
   }
