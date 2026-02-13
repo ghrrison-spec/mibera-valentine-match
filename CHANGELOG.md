@@ -5,6 +5,44 @@ All notable changes to Loa will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.37.0] — DX Hardening (Cycle 008)
+
+### Why This Release
+
+Addresses three compounding DX pain points: eager secret resolution crashes config loading when unused providers lack env vars (#300), framework development artifacts pollute fresh user project mounts (#299), and review tools process system zone files alongside user code (#303).
+
+### Added
+
+- **Lazy Config Interpolation** (`interpolation.py`): `LazyValue` wrapper defers `{env:*}` resolution until `str()` access — missing env vars for unused providers no longer crash config load (FR-1, #300)
+- **`_DEFAULT_LAZY_PATHS`**: Configurable set of dotted-key patterns (`providers.*.auth`) controlling which config paths get lazy treatment
+- **Enhanced Error Messages**: `LazyValue.resolve()` includes provider name, agent context, and `/loa-credentials set` hint on failure
+- **Mount Hygiene** (`mount-loa.sh`): `clean_grimoire_state()` removes framework development artifacts (prd.md, sdd.md, sprint.md, BEAUVOIR.md, SOUL.md) and stale a2a/archive contents after grimoire checkout (FR-3, #299)
+- **Clean Ledger Init**: Mount now initializes empty `ledger.json` with zeroed counters instead of inheriting framework cycle data
+- **NOTES.md Template**: Creates `## Learnings / ## Blockers / ## Observations` template if missing during mount
+- **52 Python Tests**: 26 original + 26 new covering LazyValue, lazy path matching, lazy interpolation, lazy redaction
+- **13 BATS Tests**: Mount hygiene — artifact removal, directory preservation, clean ledger, NOTES.md, context preservation, idempotency
+- **Credential Provider Chain** (`credentials/providers.py`): Layered resolution — env vars → encrypted store → `.env.local` (FR-2, #300)
+- **Encrypted Credential Store** (`credentials/store.py`): Fernet-encrypted `~/.loa/credentials/store.json.enc` with auto-generated key, 0600/0700 permissions, corrupt store recovery
+- **Credential Health Checks** (`credentials/health.py`): HTTP validation against OpenAI, Anthropic, Moonshot endpoints with configurable timeouts
+- **`/loa-credentials` Skill**: Interactive credential management — `status`, `set`, `test`, `delete` subcommands with `AskUserQuestion` for secure input
+- **31 Credential Tests**: EnvProvider, DotenvProvider, CompositeProvider, EncryptedStore (conditional), EncryptedFileProvider, factory, health checks, interpolation integration
+- **Review Scope Utility** (`review-scope.sh`): Shared script for zone detection + `.reviewignore` pattern matching — `detect_zones()`, `load_reviewignore()`, `is_excluded()`, `filter_files()` (FR-4, #303)
+- **`.reviewignore` Template**: Gitignore-style review exclusion patterns — system zone, state zone, generated files, vendor deps
+- **Mount `.reviewignore` Creation**: `create_reviewignore()` creates template during mount if not present
+- **lib-content.sh Scope Integration**: `prepare_content()` excludes out-of-scope files before priority-based truncation
+- **Bridgebuilder `.reviewignore` Support**: `loadReviewIgnore()` merges `.reviewignore` patterns with `LOA_EXCLUDE_PATTERNS` in truncation pipeline
+- **Audit-Sprint Zone Awareness**: Security audit skill instructions updated to focus on app zone files with `.reviewignore` support
+- **19 Review Scope BATS Tests**: Zone detection, `.reviewignore` parsing, glob/directory patterns, `--no-reviewignore` bypass, filter pipeline, combined filtering
+
+### Changed
+
+- `ProviderConfig.auth` type widened from `str` to `Any` to accept `LazyValue`
+- `interpolate_config()` accepts `lazy_paths` and `_current_path` parameters
+- `redact_config()` handles `LazyValue` without triggering resolution
+- `redact_config_value()` uses duck-typing for `LazyValue` detection (no import needed)
+- `interpolate_value()` resolves `{env:VAR}` through credential provider chain (env → encrypted → dotenv) instead of `os.environ` alone
+- `loader.py` passes `lazy_paths=_DEFAULT_LAZY_PATHS` to interpolation pipeline
+
 ## [1.36.0] - 2026-02-13 — Post-Merge Automation Pipeline
 
 ### Why This Release
