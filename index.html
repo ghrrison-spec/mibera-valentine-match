@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mibera Valentine Match</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Background effects -->
+  <canvas id="bg-canvas"></canvas>
+  <div class="noise-overlay"></div>
+  <div class="vignette"></div>
+
+  <header>
+    <h1 class="title">Mibera Valentine Match</h1>
+    <p class="subtitle">Find your Mibera's destined Valentine</p>
+    <form id="search-form" autocomplete="off">
+      <div class="search-box">
+        <input
+          type="number"
+          id="token-input"
+          min="1"
+          max="10000"
+          placeholder="Enter Mibera # (1–10,000)"
+          required
+        >
+        <button type="submit" id="search-btn">Summon</button>
+      </div>
+    </form>
+  </header>
+
+  <div id="loading" hidden>
+    <div class="loader"></div>
+    <p>Channeling the codex...</p>
+  </div>
+
+  <div id="error" hidden>
+    <p id="error-msg"></p>
+  </div>
+
+  <main id="results" hidden>
+    <div class="match-container">
+      <div class="mibera-card" id="mibera-left">
+        <div class="card-image">
+          <img id="img-left" alt="" loading="lazy">
+          <div class="img-fallback" id="fallback-left" hidden></div>
+        </div>
+        <h2 class="card-name" id="name-left"></h2>
+        <div class="card-traits" id="traits-left"></div>
+      </div>
+
+      <div class="match-badge">
+        <div class="heart-pulse">&#x1F5A4;</div>
+        <h2 class="match-text">It's a Match</h2>
+        <div class="match-score" id="match-score"></div>
+      </div>
+
+      <div class="mibera-card" id="mibera-right">
+        <div class="card-image">
+          <img id="img-right" alt="" loading="lazy">
+          <div class="img-fallback" id="fallback-right" hidden></div>
+        </div>
+        <h2 class="card-name" id="name-right"></h2>
+        <div class="card-traits" id="traits-right"></div>
+      </div>
+    </div>
+
+    <div class="explanation-section">
+      <h3 class="explanation-header">Why They're Perfect Together</h3>
+      <p class="explanation-text" id="explanation"></p>
+    </div>
+
+    <div class="try-another">
+      <button type="button" id="try-another-btn">Try Another</button>
+    </div>
+  </main>
+
+  <footer>
+    <p>Mibera Maker &mdash; 10,000 generative dNFTs &mdash; Valentine's 2026</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

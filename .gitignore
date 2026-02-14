@@ -1,0 +1,5 @@
+node_modules/
+data/miberas.json
+data/matches.json
+__pycache__/
+*.pyc

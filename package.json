@@ -1,0 +1,9 @@
+{
+  "name": "mibera-valentine-match",
+  "version": "1.0.0",
+  "description": "Mibera Valentine Date Matcher Simulator",
+  "private": true,
+  "scripts": {
+    "build": "python3 build/build.py"
+  }
+}
