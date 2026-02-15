@@ -9,7 +9,7 @@ Health check: /loa doctor
 Version: 1.36.0
 -->
 
-[![Version](https://img.shields.io/badge/version-1.36.0-blue.svg)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-1.38.0-blue.svg)](CHANGELOG.md)
 [![License](https://img.shields.io/badge/license-AGPL--3.0-green.svg)](LICENSE.md)
 [![Release](https://img.shields.io/badge/release-Post--Merge%20Automation-purple.svg)](CHANGELOG.md#1360---2026-02-13)
 
@@ -151,7 +151,7 @@ Loa uses a **three-zone model** inspired by AWS Projen and Google's ADK:
 | **Persistent Memory** | Session-spanning observations with progressive disclosure | [Scripts](.claude/scripts/memory-query.sh) |
 | **Input Guardrails** | PII filtering, injection detection, danger levels | [Protocol](.claude/protocols/input-guardrails.md) |
 | **Portable Persistence** | WAL-based persistence with circuit breakers | [Lib](.claude/lib/persistence/) |
-| **Cross-Platform Compat** | Shell scripting protocol for macOS + Linux | [Scripts](.claude/scripts/compat/) |
+| **Cross-Platform Compat** | Shell scripting protocol for macOS + Linux | [Scripts](.claude/scripts/compat-lib.sh) |
 | **Prompt Enhancement** | PTCF-based prompt analysis and improvement | [CHANGELOG.md](CHANGELOG.md) |
 | **Run Mode** | Autonomous sprint execution with draft PRs | [CLAUDE.md](CLAUDE.md#run-mode) |
 | **Run Bridge** | Iterative excellence loop with Bridgebuilder review and flatline detection | [CLAUDE.md](CLAUDE.md#run-bridge) |
