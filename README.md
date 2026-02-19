@@ -189,3 +189,6 @@ Commercial licenses are available for organizations that wish to use Loa without
 - [Changelog](CHANGELOG.md)
 - [Claude Code](https://docs.anthropic.com/en/docs/claude-code/overview)
 - [beads_rust](https://github.com/Dicklesworthstone/beads_rust)
+
+Ridden with [Loa](https://github.com/0xHoneyJar/loa)
+
