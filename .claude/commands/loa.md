@@ -25,10 +25,11 @@ Show current workflow state, health, progress, and suggest the next command. The
 ## Workflow
 
 1. **Detect State**: Run `.claude/scripts/loa-status.sh` and `.claude/scripts/golden-path.sh` to determine workflow state
-2. **Health Summary**: Show one-line system health (from `/loa doctor` quick check)
-3. **Journey Bar**: Show golden path progress visualization
-4. **Suggest Command**: Present the recommended **golden command** (not truename)
-5. **Prompt User**: Ask user to proceed or explore
+2. **Trajectory Narrative**: Display project trajectory from `golden_trajectory()` — cycle history, current frontier, open visions (v1.39.0)
+3. **Health Summary**: Show one-line system health (from `/loa doctor` quick check)
+4. **Journey Bar**: Show golden path progress visualization
+5. **Suggest Command**: Present the recommended **golden command** (not truename)
+6. **Prompt User**: Ask user to proceed or explore
 
 ## Golden Path Integration (v1.30.0)
 
@@ -49,6 +50,14 @@ The `/loa` command now suggests **golden commands** instead of truenames:
 
 ```
   Loa — Agent-Driven Development
+
+  ## Trajectory
+  This is cycle 14 of the Loa framework. Across 12 prior cycles and 93 sprints
+  since 2026-02-11, the codebase has evolved through iterative bridge loops with
+  adversarial review, persona-driven identity, and autonomous convergence.
+
+  Current frontier: Environment Design for Agent Flourishing
+  Open visions (3): Pluggable credential registry, Context Isolation, ...
 
   Health: ✓ All systems operational
   State:  Building (implementing sprint-2)
@@ -84,6 +93,12 @@ The health line shows:
 - `⚠ 2 warnings — run /loa doctor` (yellow) — non-blocking issues
 - `✗ System unhealthy — run /loa doctor` (red) — blocking issues
 
+When warnings or issues are present (yellow or red), append after the health line:
+```
+Something broken? /feedback reports it directly.
+```
+Do NOT show this line when health is clean (green).
+
 ### Journey Bar
 
 The journey bar shows position in the golden path:
@@ -115,6 +130,9 @@ Power user commands:
   /review-sprint N     Review specific sprint
   /audit-sprint N      Security audit specific sprint
   /run sprint-plan     Autonomous mode (overnight)
+
+Ad-hoc:
+  /feedback            Report issues or suggestions
 
 Diagnostics:
   /loa doctor          System health check
@@ -245,6 +263,20 @@ options:
 
 ## Implementation Notes
 
+0. **Generate trajectory narrative** (v1.39.0 — before all other output):
+   ```bash
+   source .claude/scripts/golden-path.sh
+   trajectory=$(golden_trajectory)
+   # Display trajectory output as the opening section
+   # If empty, skip silently (graceful degradation)
+   ```
+   The trajectory provides continuity of purpose — agents and humans see where the project
+   has been, what it has learned, and what it is becoming. Displayed once per session,
+   before the health summary.
+
+   Config toggle: `golden_path.show_trajectory: true` (default: true)
+   To disable: set `golden_path.show_trajectory: false` in `.loa.config.yaml`
+
 1. **Run loa-status.sh** for version and state info:
    ```bash
    status_json=$(.claude/scripts/loa-status.sh --json)
@@ -366,6 +398,8 @@ The `/loa` command integrates with:
 
   No PRD found. Ready to start planning.
 
+  Something unexpected? /feedback reports it directly.
+
   Next: /plan
   Gather requirements and plan your project.
 ```
@@ -450,4 +484,7 @@ guided_workflow:
   show_progress_bar: true    # Display visual progress
   show_alternatives: true    # Show alternative commands on 'n'
   golden_path: true          # Use golden command suggestions (default: true)
+
+golden_path:
+  show_trajectory: true      # Display trajectory narrative in /loa (v1.39.0)
 ```

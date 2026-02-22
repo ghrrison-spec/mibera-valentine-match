@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import logging
+import socket
 import sys
 import time
 from abc import ABC, abstractmethod
@@ -12,6 +13,7 @@ from typing import Any, Dict, List, Optional, Tuple
 from loa_cheval.types import (
     CompletionRequest,
     CompletionResult,
+    ConfigError,
     ContextTooLargeError,
     ModelConfig,
     ProviderConfig,
@@ -91,6 +93,10 @@ def http_post(
                 return e.code, json.loads(resp_body)
             except json.JSONDecodeError:
                 return e.code, {"error": {"message": resp_body}}
+        except urllib.error.URLError as e:
+            return 503, {"error": {"message": "URLError: %s" % e.reason}}
+        except socket.timeout:
+            return 504, {"error": {"message": "Request timed out"}}
 
 
 # --- Token Estimation ---
@@ -169,8 +175,36 @@ class ProviderAdapter(ABC):
         """Quick health probe. Returns True if provider is reachable."""
 
     def _get_auth_header(self) -> str:
-        """Get the resolved auth value from config."""
-        return self.config.auth
+        """Get the resolved auth value from config.
+
+        Handles LazyValue resolution: str(LazyValue) calls resolve() which
+        triggers env var lookup via the credential provider chain.
+
+        LazyValue contract: callers should expect ConfigError on any resolution
+        failure. All exceptions during str() conversion (KeyError for missing
+        env vars, OSError for file-based credentials, ValueError for malformed
+        credentials, RuntimeError from provider chains) are caught and wrapped
+        in ConfigError with the original exception type for debugging.
+        The outer cmd_invoke() handler remains as defense-in-depth.
+        """
+        auth = self.config.auth
+        if auth is None:
+            raise ConfigError(
+                f"No auth configured for provider '{self.provider}'."
+            )
+        if not isinstance(auth, str):
+            try:
+                auth = str(auth)
+            except Exception as exc:
+                raise ConfigError(
+                    f"Failed to resolve API key for provider '{self.provider}' "
+                    f"({type(exc).__name__}): {exc}."
+                ) from exc
+        if not auth or not auth.strip():
+            raise ConfigError(
+                f"API key is empty for provider '{self.provider}'."
+            )
+        return auth
 
     def _get_model_config(self, model_id: str) -> ModelConfig:
         """Look up model config by ID. Returns default if not found."""
