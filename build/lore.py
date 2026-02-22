@@ -188,3 +188,154 @@ ARCHETYPES = {
         "season": "fall",
     },
 }
+
+# Ancestor heritage groups and descriptions
+ANCESTOR_DESCRIPTIONS = {
+    "aboriginal": "dreamtime keeper of the oldest living culture",
+    "arabs": "desert navigator guided by star and sand",
+    "ballroom": "house and ball culture legend, walking the category",
+    "bong bear": "wandering herbalist of the sacred smoke",
+    "buddhist": "seeker of the middle path and inner stillness",
+    "chinese": "heir to the celestial empire's ancient wisdom",
+    "cypherpunk": "digital rebel encrypting freedom into code",
+    "ethiopian": "stargazer from the cradle of civilization",
+    "gabon": "keeper of iboga mysteries and forest spirits",
+    "greek": "philosopher-warrior of the Mediterranean mind",
+    "haitian": "vodou practitioner dancing with the loa",
+    "hindu": "devotee walking the path of a thousand gods",
+    "indian": "inheritor of subcontinental spiritual traditions",
+    "irish druids": "oak-sage channeling the green island's magic",
+    "japanese": "bushido soul balancing honor and innovation",
+    "mayan": "calendar keeper reading time in stone and stars",
+    "mongolian": "steppe rider whose throat-song shakes the sky",
+    "native american": "earth guardian carrying medicine wheel wisdom",
+    "nepal": "mountain mystic dwelling at the roof of the world",
+    "orthodox jew": "keeper of the covenant and Talmudic depth",
+    "palestinian": "olive-branch bearer rooted in ancient soil",
+    "polynesian": "ocean wayfinder navigating by stars and swells",
+    "punjabi": "bhangra warrior with a lion's heart",
+    "pythia": "oracle inhaling the vapors of prophecy",
+    "rastafarians": "Zion-bound soul riding the roots reggae riddim",
+    "sami": "reindeer herder singing joik under the northern lights",
+    "satanist": "left-hand path walker embracing the adversary",
+    "sicanje": "Balkan tattoo bearer marked by ancestral ink",
+    "stonewall": "liberation fighter whose riot changed the world",
+    "sufis": "whirling dervish dissolving ego in divine love",
+    "thai": "spirit house keeper blending Theravada and animism",
+    "traveller": "nomadic soul whose home is the open road",
+    "turkey": "crossroads guardian bridging East and West",
+}
+
+# Heritage group classification for compatibility scoring
+ANCESTOR_HERITAGE_GROUPS = {
+    "aboriginal": "oceanic", "polynesian": "oceanic",
+    "arabs": "middle_eastern", "palestinian": "middle_eastern", "turkey": "middle_eastern", "sufis": "middle_eastern",
+    "buddhist": "asian_spiritual", "hindu": "asian_spiritual", "nepal": "asian_spiritual",
+    "chinese": "east_asian", "japanese": "east_asian", "mongolian": "east_asian",
+    "indian": "south_asian", "punjabi": "south_asian", "thai": "south_asian",
+    "greek": "mediterranean", "sicanje": "mediterranean",
+    "ethiopian": "african", "gabon": "african", "haitian": "african",
+    "irish druids": "celtic_northern", "sami": "celtic_northern",
+    "mayan": "indigenous_american", "native american": "indigenous_american",
+    "cypherpunk": "counter_culture", "satanist": "counter_culture",
+    "ballroom": "liberation", "stonewall": "liberation", "rastafarians": "liberation",
+    "pythia": "mystical", "bong bear": "mystical", "traveller": "mystical",
+    "orthodox jew": "abrahamic",
+}
+
+def score_ancestor(anc1, anc2):
+    """Score ancestor compatibility (0-100).
+    Same ancestor = 60 (too similar), same group = 80, cross-group = varies.
+    """
+    a1 = anc1.strip().lower()
+    a2 = anc2.strip().lower()
+    if not a1 or not a2:
+        return 50
+    if a1 == a2:
+        return 60
+    g1 = ANCESTOR_HERITAGE_GROUPS.get(a1, "unknown")
+    g2 = ANCESTOR_HERITAGE_GROUPS.get(a2, "unknown")
+    if g1 == "unknown" or g2 == "unknown":
+        return 50
+    if g1 == g2:
+        return 80
+    # Cross-cultural pairings get high scores for diversity
+    return 90
+
+
+def score_time_period(tp1, tp2):
+    """Score time period harmony (0-100).
+    Ancient+modern = 100 (opposites attract across time),
+    same period = 70, one empty = 50.
+    """
+    t1 = tp1.strip().lower()
+    t2 = tp2.strip().lower()
+    if not t1 or not t2:
+        return 50
+    if t1 != t2:
+        return 100  # ancient meets modern — maximum intrigue
+    return 70  # same era — comfortable but less spark
+
+
+# Background categories for thematic grouping and flavor text
+BACKGROUND_CATEGORIES = {
+    # Rave / music scenes
+    "rave 1": "rave", "rave 2": "rave", "rave 3": "rave",
+    "milady rave": "rave", "milady rave 2": "rave",
+    "castlemorton": "rave", "hor berlin": "rave",
+    "speakers": "rave", "freetekno": "rave",
+    # Labs / science
+    "home lab": "lab", "jungle lab": "lab",
+    "super lab": "lab", "owsley lab": "lab",
+    # Nature
+    "mountain": "nature", "volcano": "nature", "tree": "nature",
+    "sunset": "nature", "sunrise": "nature", "clouds": "nature",
+    "poppy field": "nature", "starry": "nature",
+    "great barrier reef": "nature", "great bear lake": "nature",
+    "kaieteur": "nature", "peyote desert": "nature",
+    "mississippi river": "nature", "river boyne": "nature",
+    "uluru": "nature", "twelve apostles": "nature",
+    # Urban / industrial
+    "detroit": "urban", "techno city": "urban",
+    "factory": "urban", "prison": "urban",
+    "roadside": "urban", "record store": "urban",
+    "ford": "urban", "mobile records": "urban",
+    "no more walls": "urban",
+    # Ancient / mystical
+    "cave art": "ancient", "stonehenge": "ancient",
+    "newgrange": "ancient", "el dorado": "ancient",
+    "rock walls": "ancient", "midas in pactolus": "ancient",
+    # Cosmic / zodiac
+    "aquarius": "cosmic", "aries": "cosmic", "cancer": "cosmic",
+    "capricornus": "cosmic", "gemini": "cosmic", "leo": "cosmic",
+    "libra": "cosmic", "ophiuchus": "cosmic", "pisces": "cosmic",
+    "sagittarius": "cosmic", "scorpius": "cosmic", "taurus": "cosmic",
+    "virgo": "cosmic", "constellations": "cosmic",
+    # Chaos / counterculture
+    "fyre festival": "chaos", "acid test": "chaos",
+    "yeet": "chaos", "swirly": "chaos",
+    # Digital / crypto
+    "apdao": "digital", "boyco": "digital",
+    "bullas": "digital", "honeyroad": "digital",
+    "undersea cable": "digital", "pacioli": "digital",
+    # Other
+    "7eleven": "mundane", "bear cave": "shelter",
+    "panama": "tropical", "sasha": "music_legend",
+    "simple background": "minimal",
+}
+
+BACKGROUND_FLAVOR = {
+    "rave": "the strobe-lit underground",
+    "lab": "the fluorescent glow of a clandestine lab",
+    "nature": "the untamed wild",
+    "urban": "the concrete jungle",
+    "ancient": "the ruins of forgotten civilizations",
+    "cosmic": "the star-mapped heavens",
+    "chaos": "beautiful pandemonium",
+    "digital": "the encrypted datastream",
+    "mundane": "the mundane world hiding magic in plain sight",
+    "shelter": "a hidden sanctuary",
+    "tropical": "sun-drenched shores",
+    "music_legend": "the mixing desk of legend",
+    "minimal": "the void before creation",
+}

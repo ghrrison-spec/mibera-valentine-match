@@ -1,6 +1,9 @@
 import random
 
-from build.lore import ARCHETYPES, get_drug_suit, SIGN_ELEMENTS
+from build.lore import (
+    ARCHETYPES, get_drug_suit, SIGN_ELEMENTS,
+    ANCESTOR_DESCRIPTIONS, BACKGROUND_CATEGORIES, BACKGROUND_FLAVOR,
+)
 
 
 # --- Openers ---
@@ -161,6 +164,20 @@ ELEMENT_LINES = {
     ],
 }
 
+# Drug-specific ritual lines (more specific than generic drug mentions)
+DRUG_RITUAL_LINES = {
+    "ayahuasca": "Their shared affinity for ayahuasca opens doorways between worlds.",
+    "dmt": "DMT showed them the same hyperspace — now they navigate it together.",
+    "peyote": "Peyote visions led them both to the same desert truth.",
+    "lsd": "Acid opened the same doors in both their minds.",
+    "mdma": "MDMA dissolved the walls between them before they even met.",
+    "ketamine": "Ketamine took them to the same hole — and they found each other there.",
+    "mushrooms": "The mycelium network connected their consciousness long ago.",
+    "weed": "A shared love of herb keeps the conversation flowing endlessly.",
+    "ibogaine": "Ibogaine stripped them both down to their core — and the cores matched.",
+    "kava": "Kava ceremonies taught them both the art of communal calm.",
+}
+
 def element_drug_line(el1, el2, drug1, drug2):
     """Generate element/drug connection line."""
     e1 = el1.strip().lower()
@@ -179,15 +196,113 @@ def element_drug_line(el1, el2, drug1, drug2):
     line = random.choice(templates)
 
     # Add drug flavor if both have meaningful drugs
-    suit1 = get_drug_suit(drug1)
-    suit2 = get_drug_suit(drug2)
-    if drug1 and drug2 and drug1 != "sober" and drug2 != "sober":
-        if suit1 != suit2:
-            line += f" Their shared rituals — {drug1} and {drug2} — bridge the gap between worlds."
+    d1 = drug1.strip().lower()
+    d2 = drug2.strip().lower()
+    if d1 and d2 and d1 != "sober" and d2 != "sober":
+        # Check for specific drug ritual lines first
+        if d1 == d2 and d1 in DRUG_RITUAL_LINES:
+            line += " " + DRUG_RITUAL_LINES[d1]
+        elif d1 in DRUG_RITUAL_LINES:
+            line += " " + DRUG_RITUAL_LINES[d1]
+        elif d2 in DRUG_RITUAL_LINES:
+            line += " " + DRUG_RITUAL_LINES[d2]
         else:
-            line += f" A mutual affinity for {drug1} and {drug2} seals the bond."
+            suit1 = get_drug_suit(d1)
+            suit2 = get_drug_suit(d2)
+            if suit1 != suit2:
+                line += f" Their shared rituals — {d1} and {d2} — bridge the gap between worlds."
+            else:
+                line += f" A mutual affinity for {d1} and {d2} seals the bond."
 
     return line
+
+
+# --- Ancestor lines ---
+
+ANCESTOR_PAIR_TEMPLATES = [
+    "{desc1} meets {desc2} — two ancestral traditions converging across centuries.",
+    "The wisdom of {a1} ancestry fused with {a2} heritage creates something timeless.",
+    "From {a1} bloodlines to {a2} roots — the ancestors approve this union.",
+    "{desc1} and {desc2}: when lineages intertwine, new legends are born.",
+]
+
+ANCESTOR_SAME_TEMPLATES = [
+    "Both carry {a1} ancestry in their veins — a bond written in shared blood.",
+    "Two {a1} souls recognizing each other across the digital void.",
+    "The {a1} ancestors sent them both — one to find the other.",
+]
+
+def ancestor_line(anc1, anc2):
+    """Generate a line about ancestor pairing."""
+    a1 = anc1.strip().lower()
+    a2 = anc2.strip().lower()
+    if not a1 or not a2:
+        return ""
+
+    desc1 = ANCESTOR_DESCRIPTIONS.get(a1, f"{a1} heritage bearer")
+    desc2 = ANCESTOR_DESCRIPTIONS.get(a2, f"{a2} heritage bearer")
+
+    if a1 == a2:
+        template = random.choice(ANCESTOR_SAME_TEMPLATES)
+        return template.format(a1=a1.title(), desc1=desc1, desc2=desc2)
+
+    template = random.choice(ANCESTOR_PAIR_TEMPLATES)
+    return template.format(
+        a1=a1.title(), a2=a2.title(),
+        desc1=desc1.capitalize(), desc2=desc2,
+    )
+
+
+# --- Time period lines ---
+
+TIME_PERIOD_LINES_DIFF = [
+    "Ancient soul meets modern rebel — time couldn't keep them apart.",
+    "Across the ages they reach for each other — one rooted in the old world, one forging the new.",
+    "Where ancient wisdom meets modern fire, the timeline bends.",
+    "Millennia separate their origins, but the heart doesn't care about calendars.",
+]
+
+TIME_PERIOD_LINES_SAME = [
+    "Children of the same era, speaking the same temporal language.",
+    "Same time, same vibe — the era chose them both.",
+]
+
+def time_period_line(tp1, tp2):
+    """Generate a time period harmony line."""
+    t1 = tp1.strip().lower()
+    t2 = tp2.strip().lower()
+    if not t1 or not t2:
+        return ""
+    if t1 != t2:
+        return random.choice(TIME_PERIOD_LINES_DIFF)
+    return random.choice(TIME_PERIOD_LINES_SAME)
+
+
+# --- Background flavor ---
+
+def background_line(bg1, bg2):
+    """Generate a background flavor line referencing their worlds."""
+    b1 = bg1.strip().lower()
+    b2 = bg2.strip().lower()
+    if not b1 or not b2:
+        return ""
+
+    cat1 = BACKGROUND_CATEGORIES.get(b1, "")
+    cat2 = BACKGROUND_CATEGORIES.get(b2, "")
+
+    if not cat1 or not cat2:
+        return ""
+
+    flav1 = BACKGROUND_FLAVOR.get(cat1, "")
+    flav2 = BACKGROUND_FLAVOR.get(cat2, "")
+
+    if not flav1 or not flav2:
+        return ""
+
+    if cat1 == cat2:
+        return f"Both born from {flav1} — they already know each other's world."
+
+    return f"One emerged from {flav1}, the other from {flav2} — and the contrast is magnetic."
 
 
 # --- Chaos lines ---
@@ -227,14 +342,13 @@ CLOSERS = [
 
 
 def generate_explanation(m1, m2, score, chaos):
-    """Generate a 3-5 sentence match explanation."""
+    """Generate a 3-6 sentence match explanation with deep codex references."""
     # Seed RNG with both token IDs for deterministic output
     id1 = int(m1["token_id"])
     id2 = int(m2["token_id"])
     rng = random.Random(id1 * 10001 + id2)
 
     # Swap module-level random for deterministic one
-    old_random = random.Random()
     old_state = random.getstate()
     random.setstate(rng.getstate())
 
@@ -248,26 +362,40 @@ def generate_explanation(m1, m2, score, chaos):
     else:
         parts.append(random.choice(OPENERS_HARMONY))
 
-    # 2. Archetype line
+    # 2. Ancestor line (new — uses 33 unique ancestors for variety)
+    anc = ancestor_line(m1.get("ancestor", ""), m2.get("ancestor", ""))
+    if anc:
+        parts.append(anc)
+
+    # 3. Archetype line
     parts.append(archetype_line(m1["archetype"], m2["archetype"]))
 
-    # 3. Zodiac line
-    sun_score = ZODIAC_LINES  # just need the score bucket
+    # 4. Zodiac line
     from build.matching import score_zodiac
     zscore = score_zodiac(m1["sun_sign"], m2["sun_sign"])
     parts.append(zodiac_line(m1["sun_sign"], m2["sun_sign"], zscore))
 
-    # 4. Element/drug line
+    # 5. Element/drug line
     parts.append(element_drug_line(
         m1["element"], m2["element"],
         m1["drug"], m2["drug"]
     ))
 
-    # 5. Chaos mention (if applicable)
+    # 6. Time period line (new — ancient vs modern tension)
+    tp = time_period_line(m1.get("time_period", ""), m2.get("time_period", ""))
+    if tp:
+        parts.append(tp)
+
+    # 7. Background flavor (new — 73 unique backgrounds)
+    bg = background_line(m1.get("background", ""), m2.get("background", ""))
+    if bg:
+        parts.append(bg)
+
+    # 8. Chaos mention (if applicable)
     if chaos:
         parts.append(random.choice(CHAOS_LINES))
 
-    # 6. Closer
+    # 9. Closer
     parts.append(random.choice(CLOSERS))
 
     # Restore random state

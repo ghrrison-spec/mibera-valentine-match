@@ -3,3 +3,5 @@ data/miberas.json
 data/matches.json
 __pycache__/
 *.pyc
+.vercel
+.env*.local

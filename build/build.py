@@ -14,7 +14,7 @@ import time
 # Add project root to path so we can import build modules
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from build.matching import find_best_match, compute_match_score
+from build.matching import find_best_match, precompute_mibera, scale_display_scores
 from build.templates import generate_explanation
 from build.lore import get_drug_suit
 
@@ -75,11 +75,16 @@ def build_all_matches(miberas):
     chaos_count = 0
     ids = list(miberas.keys())
 
+    # Pre-compute scoring lookups for all miberas (once, not per-comparison)
+    print("  Pre-computing scoring lookups...")
+    precomputed = {mid: precompute_mibera(m) for mid, m in miberas.items()}
+
+    # First pass: compute raw scores
     for i, mid in enumerate(ids):
         if (i + 1) % 1000 == 0 or i == 0:
             print(f"  Matching {i + 1}/{total}...")
 
-        match_id, score, chaos = find_best_match(mid, miberas)
+        match_id, score, chaos = find_best_match(mid, precomputed, ids)
 
         explanation = generate_explanation(
             miberas[mid], miberas[match_id], score, chaos
@@ -87,13 +92,26 @@ def build_all_matches(miberas):
 
         matches[mid] = {
             "match_id": int(match_id),
-            "score": score,
+            "raw_score": score,
             "chaos": chaos,
             "explanation": explanation,
         }
 
         if chaos:
             chaos_count += 1
+
+    # Second pass: scale raw scores to 90-100 display range using percentile rank
+    raw_scores_dict = {mid: m["raw_score"] for mid, m in matches.items()}
+    raw_vals = list(raw_scores_dict.values())
+    print(f"  Raw score range: {min(raw_vals)} - {max(raw_vals)} (mean: {sum(raw_vals)/len(raw_vals):.1f})")
+
+    display_map = scale_display_scores(raw_scores_dict)
+    for mid in matches:
+        matches[mid]["score"] = display_map[mid]
+        del matches[mid]["raw_score"]
+
+    display_scores = [m["score"] for m in matches.values()]
+    print(f"  Display score range: {min(display_scores)} - {max(display_scores)} (mean: {sum(display_scores)/len(display_scores):.1f})")
 
     return matches, chaos_count
 
