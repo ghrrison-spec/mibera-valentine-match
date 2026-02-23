@@ -1,253 +1,421 @@
-# Sprint Plan: Interview Depth Configuration — Planning Backpressure
+# Sprint Plan: Declarative Execution Router + Adaptive Multi-Pass
 
-> Cycle: cycle-031 | PRD: grimoires/loa/prd.md | SDD: grimoires/loa/sdd.md
-> Sprints: 1 (MVP — discovering-requirements only) | Team: 1 developer (AI-assisted)
-
----
-
-## Executive Summary
-
-| Field | Value |
-|-------|-------|
-| **Total Sprints** | 1 (sprint-29) |
-| **Scope** | Config schema + discovering-requirements SKILL.md backpressure |
-| **Files Modified** | 2 (`.loa.config.yaml.example`, `discovering-requirements/SKILL.md`) |
-| **Files Created** | 1 (`.claude/scripts/tests/test-interview-config.sh`) |
-| **Success Metric** | `<interview_config>` block exists; phase transition gates exist; no hardcoded "2-3 per phase maximum"; smoke tests pass |
+> Cycle: cycle-034
+> PRD: `grimoires/loa/prd.md`
+> SDD: `grimoires/loa/sdd.md`
+> Team: 1 AI developer
+> Sprint duration: 1 sprint per session
 
 ---
 
-## Sprint 1: Config Schema + Discovering-Requirements Backpressure
+## Sprint Overview
 
-**Scope**: FR-1 (config schema), FR-2 (interview_config block), FR-3 (question limits), FR-4 (phase gates), FR-5 (pre-gen gate), FR-6 (backpressure protocol), FR-7 (anti-inference), FR-8 (conditional logic)
-**Scope size**: MEDIUM (8 tasks)
+| Sprint | Global ID | Label | Goal |
+|--------|-----------|-------|------|
+| sprint-1 | sprint-41 | Core Route Table Infrastructure | Replace imperative router with declarative route table |
+| sprint-2 | sprint-42 | Adaptive Multi-Pass + Token Estimation | Dynamic pass count + word-count estimation tier |
+| sprint-3 | sprint-43 | Polish + Hardening | Capability caching, JSON fallback, result contract tests, CI policy |
 
-### Task 1.1: Add `interview:` config schema to `.loa.config.yaml.example`
+**MVP**: Sprint 1 delivers the declarative router. Sprint 2 delivers adaptive multi-pass. Sprint 3 is hardening.
 
-**File**: `.loa.config.yaml.example`
-**Anchor**: After line 88 (after `plan_and_analyze.codebase_grounding` section, before `autonomous_agent` section)
-
-**Change**: Insert the `interview:` configuration section from SDD §2.1:
-- Section header comment with version tag `(v1.41.0)`
-- `mode: thorough` (default)
-- `per_skill:` commented-out examples
-- `input_style:` with `routing_gates: structured`, `discovery_questions: plain`, `confirmation: structured`
-- `pacing: sequential`
-- `phase_gates:` with `between_phases: true`, `before_generation: true`
-- `backpressure:` with `no_infer: true`, `show_work: true`, `min_confirmation_questions: 1`
-- Construct override comment referencing RFC #379
-
-**Acceptance Criteria**:
-- [x] `interview:` section exists between `plan_and_analyze` and `autonomous_agent`
-- [x] `yq eval '.interview.mode' .loa.config.yaml.example` returns `thorough`
-- [x] `yq eval '.interview.input_style.discovery_questions' .loa.config.yaml.example` returns `plain`
-- [x] `per_skill:` examples are commented out (not active YAML)
-- [x] Construct override comment references RFC #379
-
-### Task 1.2: Add `<interview_config>` block to discovering-requirements/SKILL.md
-
-**File**: `.claude/skills/discovering-requirements/SKILL.md`
-**Anchor**: After line 94 (`</prompt_enhancement_prelude>`)
-
-**Change**: Insert the `<interview_config>` XML-tagged section from SDD §2.2 containing 5 sub-sections:
-1. **Config Reading** — bash/yq snippet reading all interview settings with `// "default"` fallback (SDD §2.2.1)
-2. **Mode Behavior Table** — thorough vs minimal comparison table (SDD §2.2.2)
-3. **Input Style Resolution** — structured vs plain for routing/discovery/confirmation (SDD §2.2.3)
-4. **Question Pacing** — sequential vs batch behavior (SDD §2.2.4)
-5. **Backpressure Protocol** — PROHIBITED/REQUIRED lists from PRD FR-6 (SDD §2.2.5)
-
-Skill name in yq per_skill path: `discovering-requirements`
-
-**Acceptance Criteria**:
-- [x] `<interview_config>` block exists after `</prompt_enhancement_prelude>`
-- [x] Config reading bash snippet uses `yq eval` with `// "default"` fallback
-- [x] Mode behavior table has `thorough` and `minimal` rows
-- [x] PROHIBITED list includes all 6 items from PRD FR-6
-- [x] REQUIRED list includes all 4 items from PRD FR-6
-- [x] `</interview_config>` closing tag present
-
-### Task 1.3: Replace hardcoded question limit in `<kernel_framework>` (line 247)
-
-**File**: `.claude/skills/discovering-requirements/SKILL.md`
-
-**Before** (line 247):
-```
-- DO limit questions to 2-3 per phase maximum
-```
-
-**After** (SDD §2.3, row 2):
-```
-- DO limit questions to the configured range per phase (thorough: 3-6, minimal: 1-2)
-- DO ask at least {min_confirm} confirmation question(s) per phase, even if context covers it
-- DO NOT infer answers to questions you have not asked
-- When pacing is "sequential": ask ONE question, wait for response, then ask the next
-- When pacing is "batch": present questions as a numbered list
-```
-
-**Acceptance Criteria**:
-- [x] No occurrence of "2-3 per phase maximum" in SKILL.md
-- [x] "configured range" language present in `<kernel_framework>`
-- [x] Sequential and batch pacing instructions present
-
-### Task 1.4: Replace Phase 0.5 question limit (line 597)
-
-**File**: `.claude/skills/discovering-requirements/SKILL.md`
-
-**Before** (line 597):
-```
-3. Ask focused question (max 2-3 per phase)
-```
-
-**After** (SDD §2.3, row 3):
-```
-3. Ask focused questions (respect configured range and pacing)
-```
-
-**Acceptance Criteria**:
-- [x] No occurrence of "max 2-3 per phase" in Phase 0.5 section
-- [x] "configured range and pacing" language present
-
-### Task 1.5: Replace conditional phase logic (lines 613-632)
-
-**File**: `.claude/skills/discovering-requirements/SKILL.md`
-
-**Before** (lines 613-632): Three-branch IF/ELSE with "max 2-3 questions"
-
-**After** (SDD §2.6): Four-branch mode-aware logic:
-1. Phase fully covered AND mode == "minimal" → summarize + 1 confirmation → next
-2. Phase fully covered AND mode == "thorough" → summarize + min_confirm questions → DO NOT skip → wait
-3. Phase partially covered → summarize known + ask about gaps (respect range/pacing)
-4. Phase not covered → full discovery (respect range/pacing) → iterate until complete
-
-**Acceptance Criteria**:
-- [x] Four-branch conditional logic present
-- [x] `mode == "thorough"` branch enforces minimum confirmation questions
-- [x] `mode == "minimal"` branch allows gap-skipping
-- [x] Both branches reference "configured range and pacing"
-- [x] No "max 2-3 questions" remaining in this section
-
-### Task 1.6: Add phase transition gates after Phases 1-7
-
-**File**: `.claude/skills/discovering-requirements/SKILL.md`
-
-**Change**: After each of the 7 phase headings (lines 634-682), insert the Phase Transition Gate template from SDD §2.4:
-- When `gate_between` is true: summarize (3-5 bullets, cited), state carryforward, present transition (structured AskUserQuestion or plain text per `routing_style`), WAIT for response
-- When `gate_between` is false: one-line transition
-
-Gates inserted after:
-- Phase 1: Problem & Vision (after line 637)
-- Phase 2: Goals & Success Metrics (after line 642)
-- Phase 3: User & Stakeholder Context (after line 647)
-- Phase 4: Functional Requirements (after line 666 — after EARS section)
-- Phase 5: Technical & Non-Functional (after line 671)
-- Phase 6: Scope & Prioritization (after line 676)
-- Phase 7: Risks & Dependencies (after line 682)
-
-**Note**: Line numbers are approximate — apply insertions top-to-bottom. After each insertion, subsequent line numbers shift.
-
-**Acceptance Criteria**:
-- [x] 7 phase transition gate blocks exist (one per phase)
-- [x] Each gate includes summary + carryforward + transition prompt + WAIT directive
-- [x] Each gate has `gate_between` true/false conditional
-- [x] Structured gates reference AskUserQuestion with Continue/Go back/Skip ahead
-- [x] Plain gates use direct text "Continue, go back, or skip ahead?"
-
-### Task 1.7: Add anti-inference directive to Phase 4
-
-**File**: `.claude/skills/discovering-requirements/SKILL.md`
-**Anchor**: Inside or immediately after Phase 4 (Functional Requirements) section, before the Phase 4 transition gate
-
-**Change**: Insert PRD FR-7 directive (SDD §2.3, row 7):
-```
-When the user provides a feature list, DO NOT expand it with "you'll probably
-also need..." additions. If you believe something is missing, ASK:
-"I notice [X] isn't mentioned. Intentional, or should we add it?"
-```
-
-**Acceptance Criteria**:
-- [x] Anti-inference directive present in Phase 4 section
-- [x] Contains "you'll probably also need" as PROHIBITED example
-- [x] Contains the "I notice [X] isn't mentioned" question template
-
-### Task 1.8: Add pre-generation gate before Phase 8
-
-**File**: `.claude/skills/discovering-requirements/SKILL.md`
-**Anchor**: Before line 684 (`## Phase 8: PRD Generation`)
-
-**Change**: Insert the Pre-Generation Gate from SDD §2.5:
-- When `gate_before_gen` is true: present completeness summary (phases covered, questions asked, assumptions with `[ASSUMPTION]` tags and consequences), ask "Ready to generate PRD?" using `routing_style`, DO NOT generate until user confirms
-- When `gate_before_gen` is false: proceed directly with one-line notice
-
-**Acceptance Criteria**:
-- [x] Pre-generation gate block exists before Phase 8
-- [x] `gate_before_gen` true/false conditional present
-- [x] Assumption enumeration with `[ASSUMPTION]` tags
-- [x] "DO NOT generate until user explicitly confirms" directive present
-- [x] Phases covered count and questions asked count mentioned
-
-### Task 1.9: Create smoke test script
-
-**File**: `.claude/scripts/tests/test-interview-config.sh` (new file)
-
-**Change**: Create test script validating all structural changes from SDD §4.2:
-
-| Assertion | What to Check |
-|-----------|--------------|
-| `<interview_config>` block exists | `grep -q '<interview_config>' SKILL.md` |
-| Old question limit removed | `! grep -q '2-3 per phase maximum' SKILL.md` |
-| Config-aware limit present | `grep -q 'configured range' SKILL.md` |
-| Backpressure PROHIBITED block | `grep -q 'DO NOT answer your own questions' SKILL.md` |
-| Phase transition gate exists | `grep -q 'Phase Transition' SKILL.md` |
-| Pre-generation gate exists | `grep -q 'Pre-Generation Gate' SKILL.md` |
-| Anti-inference directive | `grep -q "you.ll probably also need" SKILL.md` |
-| Config example has interview | `grep -q 'interview:' .loa.config.yaml.example` |
-| yq defaults resolve | `yq eval '.interview.mode // "thorough"' .loa.config.yaml` returns non-empty |
-
-**Acceptance Criteria**:
-- [x] Script exists at `.claude/scripts/tests/test-interview-config.sh`
-- [x] Script is executable (`chmod +x`)
-- [x] Uses `((errors+=1))` not `((errors++))` (set -e safety)
-- [x] All 9 assertions pass after implementation
-- [x] Existing `test-ux-phase2.sh` still passes (no regressions)
+**Risk**: Sprint 1 is the highest-risk sprint (core routing refactor). Sprints 2-3 are additive.
 
 ---
 
-## Task Dependency Graph
+## Sprint 1: Core Route Table Infrastructure
 
-```
-Task 1.1 (config schema)         ← independent, separate file
-Task 1.2 (interview_config)      ← independent, line 94
-Task 1.3 (kernel_framework)      ← independent, line 247
-Task 1.4 (Phase 0.5 limit)       ← independent, line 597
-Task 1.5 (conditional logic)     ← after 1.2 (same region), lines 613-632
-Task 1.6 (phase gates)           ← after 1.5 (line numbers shift), lines 634-682
-Task 1.7 (anti-inference)        ← after 1.6 (inside Phase 4 gate area)
-Task 1.8 (pre-gen gate)          ← after 1.7 (line numbers shift), before line 684
-Task 1.9 (smoke test)            ← after all above (validates everything)
-```
+**Goal**: Replace the 56-line imperative `route_review()` with a declarative route table. All routing decisions driven by YAML configuration. Zero behavioral change for existing users.
 
-**Implementation order**: 1.1, 1.2, 1.3, 1.4 (parallel-safe) → 1.5 → 1.6 → 1.7 → 1.8 → 1.9
+**Global ID**: sprint-41
+
+### Tasks
+
+#### Task 1.1: Create lib-route-table.sh — Data Structures + Defaults
+
+**Description**: Create `.claude/scripts/lib-route-table.sh` with parallel array data structures (`_RT_BACKENDS`, `_RT_CONDITIONS`, `_RT_CAPABILITIES`, `_RT_FAIL_MODES`, `_RT_TIMEOUTS`, `_RT_RETRIES`), associative array registries (`_CONDITION_REGISTRY`, `_BACKEND_REGISTRY`), and the default route table loader (`_rt_load_defaults()`).
+
+**Acceptance Criteria**:
+- [ ] File exists at `.claude/scripts/lib-route-table.sh`
+- [ ] All 6 parallel arrays declared
+- [ ] Both associative array registries declared
+- [ ] `_rt_load_defaults()` loads hounfour → codex → curl cascade matching cycle-033 behavior
+- [ ] `register_builtin_conditions()` maps 4 condition names to functions
+- [ ] `register_builtin_backends()` maps 3 backend names to wrapper functions
+- [ ] Backend wrappers (`_backend_hounfour`, `_backend_codex`, `_backend_curl`) call existing library functions
+- [ ] No `eval` or dynamic function construction
+- [ ] `_rt_validate_array_lengths()` asserts all `_RT_*` arrays have identical length before execution (Flatline SKP-002: parallel array desync guard)
+- [ ] All append operations go through `_rt_append_route()` helper that atomically appends to all 6 arrays (Flatline SKP-002)
+
+**Effort**: Medium
+**Dependencies**: None
+
+#### Task 1.2: Implement parse_route_table() + validate_route_table()
+
+**Description**: YAML parser using `yq eval` to populate parallel arrays from `.loa.config.yaml`. Schema validation with fail-closed for custom routes, fail-open for defaults. Schema version check (rejects `route_schema > 1`). yq-missing detection with `LOA_ALLOW_DEFAULTS_WITHOUT_YQ` override (Flatline IMP-004).
+
+**Acceptance Criteria**:
+- [ ] `parse_route_table()` reads YAML routes into `_RT_*` arrays
+- [ ] Falls back to `_rt_load_defaults()` when no `gpt_review.routes` in config
+- [ ] Rejects `route_schema > 1` with clear upgrade message
+- [ ] `validate_route_table()` checks: backend required + registered, when non-empty, fail_mode enum, at least one route, max routes policy (10)
+- [ ] Fail-closed: custom routes with errors → exit 2
+- [ ] Fail-open: no custom routes → use defaults with log
+- [ ] yq-missing + config has routes → fail-closed (exit 2) unless `LOA_ALLOW_DEFAULTS_WITHOUT_YQ=1`
+- [ ] yq v3 vs v4 detection: check `yq --version` for v4+ and reject v3 with clear error message (Flatline IMP-003)
+- [ ] `LOA_ALLOW_DEFAULTS_WITHOUT_YQ` illegal in CI (`CI=true`) — always fail-closed (Flatline SKP-001)
+- [ ] Per-route `timeout` and `retries` fields parsed with validation bounds: timeout 1-600s, retries 0-5 (Flatline IMP-002, SKP-005)
+- [ ] Canonical YAML schema example included as comment block in lib-route-table.sh header (Flatline IMP-004)
+
+**Effort**: Medium
+**Dependencies**: Task 1.1
+
+#### Task 1.3: Implement execute_route_table() + _evaluate_conditions()
+
+**Description**: The main execution loop that replaces imperative routing. Iterates routes in order, evaluates AND conditions, calls backend, validates result, handles fallthrough/hard_fail. Per-route timeout and retry support (Flatline IMP-002).
+
+**Acceptance Criteria**:
+- [ ] `execute_route_table()` iterates routes, first success wins
+- [ ] `_evaluate_conditions()` implements AND logic over comma-separated condition names with whitespace trimming and empty-token rejection (Flatline SKP-003)
+- [ ] Unknown conditions evaluate as false for defaults, validation error for custom routes (fail-closed) (Flatline SKP-003)
+- [ ] Per-route timeout overrides global timeout (clamped to 1-600s)
+- [ ] Per-route retries with `[route-table] retry N/M` logging (clamped to 0-5)
+- [ ] Global max attempts cap: `_RT_MAX_TOTAL_ATTEMPTS` (default 10) — stops iteration if total attempts across all routes exceeds cap (Flatline SKP-005)
+- [ ] Retry policy: retries apply to non-zero exit AND invalid JSON output; timeouts count as non-zero exit (Flatline SKP-005)
+- [ ] Backend result validated via `validate_review_result()`
+- [ ] `fallthrough` continues to next route; `hard_fail` returns exit 2
+- [ ] All routes exhausted → exit 2
+- [ ] Each attempt logged: `[route-table] trying backend=X, conditions=[Y], result=success|fail`
+
+**Effort**: Medium
+**Dependencies**: Task 1.1, Task 1.2
+
+#### Task 1.4: Implement validate_review_result()
+
+**Description**: Shared backend result contract gate (PRD FR-1.8). Checks JSON validity, required `verdict` field with enum, minimum length, and `findings` array type.
+
+**Acceptance Criteria**:
+- [ ] Returns 0 for valid result, 1 for invalid
+- [ ] Checks: JSON validity via `jq empty`, `verdict` exists and is one of `APPROVED|CHANGES_REQUIRED|DECISION_NEEDED|SKIPPED`, length ≥ 20, `findings` is array if present
+- [ ] Verdict-to-exit-code truth table defined and tested (Flatline IMP-006):
+  - `APPROVED` → exit 0 (pipeline continues)
+  - `CHANGES_REQUIRED` → exit 0 (pipeline continues, findings surfaced)
+  - `DECISION_NEEDED` → exit 0 (pipeline continues, flagged for human)
+  - `SKIPPED` → exit 0 (pipeline continues, logged as no-review)
+  - Invalid/missing verdict → exit 1 (fallthrough to next route)
+- [ ] Logs specific warning for each validation failure
+- [ ] Backend returning exit 0 + garbage is treated as failure (fallthrough)
+
+**Effort**: Small
+**Dependencies**: None
+
+#### Task 1.5: Implement init_route_table() + log_route_table() + _rt_apply_execution_mode()
+
+**Description**: Single initialization entrypoint (idempotent, clears previous state per Flatline IMP-001). Config-to-code tracing (PRD G6). Execution mode filter for legacy `execution_mode` config key.
+
+**Acceptance Criteria**:
+- [ ] `init_route_table()` clears `_RT_*` arrays before populating (idempotency)
+- [ ] Calls register → parse → CI opt-in check → validate in sequence
+- [ ] CI opt-in: custom routes in CI require `LOA_CUSTOM_ROUTES=1`
+- [ ] `log_route_table()` emits effective route table + SHA-256 hash to stderr
+- [ ] `_rt_apply_execution_mode()` filters routes for `codex` and `curl` modes
+- [ ] `auto` mode leaves table unmodified
+- [ ] `codex` mode keeps codex (hard_fail) + curl
+- [ ] `curl` mode keeps curl only (hard_fail)
+
+**Effort**: Medium
+**Dependencies**: Task 1.2, Task 1.3
+
+#### Task 1.6: Legacy Router Kill-Switch (Flatline IMP-001)
+
+**Description**: Add `LOA_LEGACY_ROUTER=1` env var that bypasses the declarative route table and uses the cycle-033 imperative `route_review()` implementation. Critical for production rollback if subtle regressions are discovered post-deployment.
+
+**Acceptance Criteria**:
+- [ ] When `LOA_LEGACY_ROUTER=1`, `route_review()` uses the original imperative implementation
+- [ ] Legacy implementation preserved in `_route_review_legacy()` function
+- [ ] Log line emitted: `[route-table] using legacy router (LOA_LEGACY_ROUTER=1)`
+- [ ] Test verifying legacy router produces identical output to declarative router for default config
+- [ ] Documented in lib-route-table.sh header comments
+
+**Effort**: Small
+**Dependencies**: Task 1.5
+
+#### Task 1.7: Refactor route_review() in gpt-review-api.sh
+
+**Description**: Replace the 56-line imperative `route_review()` with ~15 lines that: (1) `source lib-route-table.sh`, (2) call `init_route_table()`, (3) apply `execution_mode` filter, (4) `log_route_table()`, (5) `execute_route_table()`. Behavioral equivalence with cycle-033. Includes `LOA_LEGACY_ROUTER` check at top.
+
+**Acceptance Criteria**:
+- [ ] `route_review()` reduced from 56 to ~15 lines
+- [ ] `source lib-route-table.sh` added near top of gpt-review-api.sh
+- [ ] Zero imperative backend-selection logic remains (G1)
+- [ ] Default behavior (no config) identical to cycle-033
+- [ ] `execution_mode` override still works (auto/codex/curl)
+- [ ] Both `execution_mode` and `routes` present → `routes` wins with warning
+- [ ] Configuration precedence matrix enforced (Flatline IMP-009): `LOA_LEGACY_ROUTER` > `LOA_CUSTOM_ROUTES` > `execution_mode` > `routes` > defaults
+
+**Effort**: Medium
+**Dependencies**: Task 1.5, Task 1.6
+
+#### Task 1.8: Golden Tests for Backend Selection Sequences
+
+**Description**: Behavioral equivalence tests (PRD FR-1.10) asserting exact backend selection sequences for 7 representative scenarios. Uses mock backends via stub functions.
+
+**Acceptance Criteria**:
+- [ ] Tests in `.claude/scripts/tests/test-gpt-review-route-table.bats`
+- [ ] 7 golden tests: all available, hounfour fails, full cascade, curl only, codex hard fail, invalid JSON, empty table
+- [ ] Each test asserts exact sequence of attempted backends via log inspection
+- [ ] Mock backends return configurable success/failure
+- [ ] All 7 tests pass
+
+**Effort**: Medium
+**Dependencies**: Task 1.7
+
+#### Task 1.9: Route Table Parser Tests
+
+**Description**: Unit tests for `parse_route_table()` and `validate_route_table()` with YAML fixture files.
+
+**Acceptance Criteria**:
+- [ ] Tests in `.claude/scripts/tests/test-gpt-review-route-table.bats` (same file)
+- [ ] 9 parser tests: valid 3 routes, empty routes, unknown backend, unknown condition, schema v2, max routes exceeded, missing when, invalid fail_mode, duplicate backend
+- [ ] YAML fixture files in `.claude/scripts/tests/fixtures/gpt-review/route-configs/`
+- [ ] All 9 tests pass
+- [ ] All 117 existing tests still pass (regression)
+
+**Effort**: Medium
+**Dependencies**: Task 1.7
+
+#### Task 1.10: Adversarial YAML Security Tests (Flatline IMP-010, SKP-010)
+
+**Description**: Negative security tests with adversarial YAML fixture files to verify no injection, no eval, and safe handling of untrusted config values.
+
+**Acceptance Criteria**:
+- [ ] Adversarial YAML fixtures: shell injection in backend name, command substitution in condition name, extreme timeout (999999), extreme retries (999), YAML anchors/aliases, multiline strings in field values
+- [ ] All adversarial fixtures handled safely (rejected or clamped, never executed)
+- [ ] Backend names validated against registry before any function call
+- [ ] Condition names validated against registry before any function call
+- [ ] Timeout/retry values clamped to bounds (1-600s, 0-5)
+- [ ] Tests in `test-gpt-review-route-table.bats`
+
+**Effort**: Small
+**Dependencies**: Task 1.9
 
 ---
 
-## Appendix C: Goal Traceability
+## Sprint 2: Adaptive Multi-Pass + Token Estimation
 
-| Goal | Sprint Coverage | Status |
-|------|----------------|--------|
-| G-1: Structural friction | Tasks 1.6, 1.8 (phase gates, pre-gen gate) | COVERED |
-| G-2: Question count scales | Tasks 1.3, 1.4, 1.5 (config-aware limits + mode logic) | COVERED |
-| G-3: No inference without asking | Tasks 1.2, 1.7 (backpressure protocol + anti-inference) | COVERED |
-| G-4: Configurable input style | Tasks 1.1, 1.2 (config schema + input style resolution) | COVERED |
-| G-5: Sequential pacing default | Tasks 1.1, 1.2 (config schema + pacing rules) | COVERED |
-| G-6: Forward-compatible | Task 1.1 (construct override comment) | COVERED (schema only) |
+**Goal**: Multi-pass review depth adapts to change complexity. Simple changes get 1 pass; complex changes get 3. Token estimation improved with word-count tier.
+
+**Global ID**: sprint-42
+
+### Tasks
+
+#### Task 2.1: Implement classify_complexity()
+
+**Description**: Deterministic complexity classifier in `lib-multipass.sh` using diff signals: files changed, lines changed, security-sensitive path denylist.
+
+**Acceptance Criteria**:
+- [ ] Function in `lib-multipass.sh` returning "low" | "medium" | "high"
+- [ ] Counts files changed from `diff --git` markers
+- [ ] Counts lines changed from `+`/`-` markers
+- [ ] Security-sensitive denylist: `.claude/`, `lib-security`, `auth`, `credentials`, `secrets`, `.env`
+- [ ] Security hit → always "high"
+- [ ] >15 files OR >2000 lines → "high"
+- [ ] >3 files OR >200 lines → "medium"
+- [ ] Otherwise → "low"
+
+**Effort**: Small
+**Dependencies**: Sprint 1
+
+#### Task 2.2: Implement reclassify_with_model_signals()
+
+**Description**: Post-Pass-1 reclassifier combining deterministic signals with model-produced complexity. Single-pass requires BOTH signals low (PRD FR-2.1 dual-signal matrix).
+
+**Acceptance Criteria**:
+- [ ] Function in `lib-multipass.sh` taking `det_level` and `pass1_output`
+- [ ] Extracts `risk_area_count` and estimates scope tokens from Pass 1 output
+- [ ] Reads configurable thresholds from `.gpt_review.multipass.thresholds.*`
+- [ ] Model level: risk_areas ≤ low_risk AND scope ≤ low_scope → "low"; risk_areas > high_risk OR scope > high_scope → "high"; else "medium"
+- [ ] Dual-signal: BOTH low → "low"; EITHER high → "high"; else "medium"
+- [ ] Missing complexity field defaults to "medium" (never single-pass)
+
+**Effort**: Small
+**Dependencies**: Task 2.1
+
+#### Task 2.3: Modify run_multipass() for Adaptive Flow
+
+**Description**: Integrate adaptive classification into the existing 3-pass orchestrator. When `multipass.adaptive: true` (default), classify before deciding pass count. Pass 1 always runs. Decision between Pass 1 and Pass 2.
+
+**Acceptance Criteria**:
+- [ ] Reads `adaptive` config key (default true)
+- [ ] If `adaptive: false` → unchanged 3-pass behavior
+- [ ] If adaptive: calls `classify_complexity()` before Pass 1
+- [ ] After Pass 1: calls `reclassify_with_model_signals()` for final level
+- [ ] `low` → returns Pass 1 output as combined review
+- [ ] `high` → uses extended budgets from config for Pass 2
+- [ ] `medium` → standard 3-pass
+- [ ] Extended budgets configurable: `pass2_input` (default 30000), `pass2_output` (default 10000)
+
+**Effort**: Medium
+**Dependencies**: Task 2.1, Task 2.2
+
+#### Task 2.4: Update estimate_token_count() — Word-Count Tier
+
+**Description**: Insert word-count tier between tiktoken (Tier 1) and chars/4 (Tier 3) in `lib-multipass.sh`. Uses `wc -w * 4/3` formula.
+
+**Acceptance Criteria**:
+- [ ] Tier 2 inserted between existing Tier 1 and Tier 3
+- [ ] Formula: `(word_count * 4 + 2) / 3` (integer arithmetic)
+- [ ] Falls through to chars/4 only if `wc -w` returns 0
+- [ ] No new dependencies (wc is always available)
+
+**Effort**: Small
+**Dependencies**: Sprint 1
+
+#### Task 2.5: Token Estimation Benchmark Corpus
+
+**Description**: Create ≥10 code sample files with pre-computed tiktoken token counts. Test asserts word-count tier mean error ≤15% and p95 ≤25%.
+
+**Acceptance Criteria**:
+- [ ] Fixture files in `.claude/scripts/tests/fixtures/gpt-review/token-corpus/`
+- [ ] ≥10 code samples: mix of bash, Python, JavaScript, JSON, prose
+- [ ] Each sample has companion `.tokens` file with tiktoken count
+- [ ] Test in `test-gpt-review-adaptive.bats` computes mean and p95 error
+- [ ] Mean error ≤15%, p95 ≤25% for word-count tier
+
+**Effort**: Medium
+**Dependencies**: Task 2.4
+
+#### Task 2.6: Adaptive Multi-Pass Tests
+
+**Description**: Tests for `classify_complexity()`, `reclassify_with_model_signals()`, and the adaptive flow in `run_multipass()`.
+
+**Acceptance Criteria**:
+- [ ] Tests in `.claude/scripts/tests/test-gpt-review-adaptive.bats`
+- [ ] 6 tests: small diff both low (1 pass), large diff det high (3 pass), security path (3 pass), det low model high (3 pass), det high model low (3 pass), adaptive disabled (3 pass)
+- [ ] Mock diff content with known file/line counts
+- [ ] Mock Pass 1 output with known complexity fields
+- [ ] All 6 tests pass
+
+**Effort**: Medium
+**Dependencies**: Task 2.3
+
+---
+
+## Sprint 3: Polish + Hardening
+
+**Goal**: Optimize capability detection, add JSON extraction fallback, add result contract tests, enforce CI policy constraints. Full regression verification.
+
+**Global ID**: sprint-43
+
+### Tasks
+
+#### Task 3.1: Optimize detect_capabilities() — Cached Help Text
+
+**Description**: Hoist `codex exec --help` call above the flag-probing loop in `lib-codex-exec.sh`. Single subprocess call instead of N calls.
+
+**Acceptance Criteria**:
+- [ ] `codex exec --help` called exactly once per `detect_capabilities()` invocation
+- [ ] Help text stored in local variable, grep'd per flag
+- [ ] Existing cache file logic unchanged
+- [ ] Existing test coverage still passes
+
+**Effort**: Small
+**Dependencies**: Sprint 1
+
+#### Task 3.2: Add Python3 JSON Decoder Fallback
+
+**Description**: Add `json.JSONDecoder().raw_decode()` fallback between greedy regex (Tier 3) and error return (Tier 4) in `parse_codex_output()` in `lib-codex-exec.sh`.
+
+**Acceptance Criteria**:
+- [ ] Tier 3.5 added: Python3 raw_decode for arbitrary nesting
+- [ ] Only invoked when python3 is available
+- [ ] Falls through gracefully when python3 missing
+- [ ] Output validated with `jq empty` before returning
+- [ ] No functional change when greedy regex already succeeds
+
+**Effort**: Small
+**Dependencies**: Sprint 1
+
+#### Task 3.3: Result Contract Tests
+
+**Description**: Unit tests for `validate_review_result()` covering all validation paths.
+
+**Acceptance Criteria**:
+- [ ] 7 tests: valid approved, valid changes required, missing verdict, invalid verdict, too short, invalid JSON, findings not array
+- [ ] Tests in `test-gpt-review-route-table.bats`
+- [ ] All 7 tests pass
+
+**Effort**: Small
+**Dependencies**: Sprint 1 (Task 1.4)
+
+#### Task 3.4: CI Policy Constraints
+
+**Description**: Enforce `LOA_CUSTOM_ROUTES=1` requirement in CI. Add `GPT_REVIEW_ADAPTIVE` env var override for adaptive multi-pass.
+
+**Acceptance Criteria**:
+- [ ] When `CI=true` and custom routes detected, default blocks unless `LOA_CUSTOM_ROUTES=1`
+- [ ] `GPT_REVIEW_ADAPTIVE=0` disables adaptive multi-pass regardless of config
+- [ ] `GPT_REVIEW_ADAPTIVE=1` enables adaptive regardless of config
+- [ ] Unset → uses config value
+- [ ] Test coverage for both env var overrides
+
+**Effort**: Small
+**Dependencies**: Sprint 1, Sprint 2
+
+#### Task 3.5: Full Integration Verification
+
+**Description**: Run all existing tests to verify zero regression. Document any test modifications needed.
+
+**Acceptance Criteria**:
+- [ ] All 117 existing tests from cycle-033 pass
+- [ ] All new tests from Sprints 1-3 pass
+- [ ] Zero test modifications to existing tests
+- [ ] If any existing test needs modification, document reason and get approval
+
+**Effort**: Small
+**Dependencies**: All previous tasks
 
 ---
 
 ## Risk Register
 
-| Risk | Mitigation |
-|------|-----------|
-| Line numbers shift after each insertion | Apply modifications top-to-bottom per SDD §2.3 note |
-| Prose directives ignored by Claude | Accepted as best-effort. Iterate on language if needed. (PRD §8) |
-| Large SKILL.md becomes harder to maintain | All insertions are XML-tagged sections. No refactoring of existing content. |
-| Existing smoke tests regress | Task 1.9 includes running `test-ux-phase2.sh` as regression check |
+| Risk | Sprint | Mitigation |
+|------|--------|------------|
+| Route table parse error breaks routing | 1 | Fail-closed for custom, fail-open for defaults. Golden tests. Kill-switch via `LOA_LEGACY_ROUTER=1` (IMP-001). |
+| Parallel array desync | 1 | Atomic `_rt_append_route()` helper + `_rt_validate_array_lengths()` invariant check (SKP-002). |
+| Adaptive classification too aggressive | 2 | Dual-signal requires BOTH agreement. Denylist for security paths. |
+| yq v4 not available or wrong version | 1 | Version detection (v3 vs v4), fail-closed + env override, `LOA_ALLOW_DEFAULTS_WITHOUT_YQ` illegal in CI (IMP-003, SKP-001). |
+| Existing tests break | 3 | Sprint 3 dedicated to regression verification |
+| Backend result contract too strict | 1 | Conservative thresholds (20 char min), iterative tuning |
+| Runaway retries/timeouts | 1 | Bounds: timeout 1-600s, retries 0-5, global max attempts cap 10 (SKP-005). |
+| Untrusted YAML in CI | 1 | Adversarial security tests, registry validation before execution, clamped bounds (SKP-010). |
+| Config precedence confusion | 1 | Explicit precedence matrix documented + tested (IMP-009). |
+
+## Flatline Sprint Review Integration
+
+Flatline Protocol reviewed this sprint plan with 80% model agreement.
+
+**HIGH_CONSENSUS integrated (5)**:
+- IMP-001 (avg 880): Legacy router kill-switch via `LOA_LEGACY_ROUTER=1` → Task 1.6
+- IMP-003 (avg 770): yq v3/v4 version detection → Task 1.2
+- IMP-004 (avg 830): Canonical YAML schema example in lib-route-table.sh → Task 1.2
+- IMP-006 (avg 865): Verdict-to-exit-code truth table → Task 1.4
+- IMP-009 (avg 795): Configuration precedence matrix → Task 1.7
+
+**DISPUTED resolved (2)**:
+- IMP-002 (GPT 420, Opus 820): Rejected — concurrency/locking over-scoped for bash CLI tool. SDD already documents single-process assumption.
+- IMP-010 (GPT 840, Opus 450): Accepted — adversarial YAML security tests added → Task 1.10
+
+**BLOCKERS addressed (5)**:
+- SKP-001 (900): Addressed by IMP-003 (yq version pinning) + `LOA_ALLOW_DEFAULTS_WITHOUT_YQ` illegal in CI → Task 1.2
+- SKP-002 (860): Addressed by `_rt_append_route()` atomic helper + `_rt_validate_array_lengths()` invariant → Task 1.1
+- SKP-003 (720): Addressed by whitespace trimming + empty-token rejection in `_evaluate_conditions()` → Task 1.3
+- SKP-005 (740): Addressed by bounds clamping (timeout 1-600s, retries 0-5) + global max attempts cap → Task 1.3
+- SKP-010 (760): Addressed by adversarial YAML security tests + registry validation → Task 1.10
+
+## Definition of Done
+
+- All acceptance criteria checked
+- All new code has test coverage
+- All 117 existing tests pass without modification
+- Sprint review + audit cycle passed
+- No new security vulnerabilities introduced
