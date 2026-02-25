@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "active_cycle": null,
+  "active_cycle": "cycle-039",
   "cycles": [
     {
       "id": "cycle-036",
@@ -103,7 +103,71 @@
           "status": "completed"
         }
       ]
+    },
+    {
+      "id": "cycle-039",
+      "label": "Two-Pass Bridge Review — Decouple Convergence from Enrichment",
+      "status": "active",
+      "created": "2026-02-25T12:30:00Z",
+      "prd": "grimoires/loa/prd.md",
+      "sdd": "grimoires/loa/sdd.md",
+      "sprints": [
+        {
+          "local_id": 1,
+          "global_id": 63,
+          "label": "Two-Pass Bridge Review Pipeline",
+          "status": "completed"
+        },
+        {
+          "local_id": 2,
+          "global_id": 64,
+          "label": "Excellence Hardening — Bridge Iteration 2",
+          "status": "completed"
+        },
+        {
+          "local_id": 3,
+          "global_id": 65,
+          "label": "Final Polish — Bridge Iteration 3",
+          "status": "completed"
+        },
+        {
+          "local_id": 4,
+          "global_id": 66,
+          "label": "Metacognition — Confidence-Weighted Enrichment",
+          "status": "completed"
+        },
+        {
+          "local_id": 5,
+          "global_id": 67,
+          "label": "Persona Provenance + Review Pluralism Foundation",
+          "status": "completed"
+        },
+        {
+          "local_id": 6,
+          "global_id": 68,
+          "label": "Ecosystem Context Integration — Pass 0 Prototype",
+          "status": "completed"
+        },
+        {
+          "local_id": 7,
+          "global_id": 69,
+          "label": "Enrichment Pipeline Ergonomics — Schema-First Architecture",
+          "status": "completed"
+        },
+        {
+          "local_id": 8,
+          "global_id": 70,
+          "label": "Pass 1 Convergence Cache — Cost Intelligence",
+          "status": "completed"
+        },
+        {
+          "local_id": 9,
+          "global_id": 71,
+          "label": "Dynamic Ecosystem Context — From Static Hints to Living Memory",
+          "status": "completed"
+        }
+      ]
     }
   ],
-  "global_sprint_counter": 62
+  "global_sprint_counter": 71
 }
