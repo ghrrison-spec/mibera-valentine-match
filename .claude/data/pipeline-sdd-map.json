@@ -96,6 +96,7 @@
       "glob": ".claude/data/pipeline-sdd-map.json",
       "sdd": ".claude/skills/run-bridge/SKILL.md",
       "label": "Pipeline SDD Map",
+      "constitutional": true,
       "sections": ["PIPELINE_SELF_REVIEW", "SDD Resolution"]
     },
     {

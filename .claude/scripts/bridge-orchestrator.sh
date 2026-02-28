@@ -440,6 +440,45 @@ bridge_main() {
     sprint_goal=$(grep -m1 "^## Sprint" "$PROJECT_ROOT/grimoires/loa/sprint.md" 2>/dev/null | sed 's/^## //' || echo "bridge iteration $iteration")
     load_bridge_context "$sprint_goal"
 
+    # 2d.1: Lore discoverability — load relevant patterns for review context (T2.5, cycle-047)
+    local lore_context=""
+    local lore_index="$PROJECT_ROOT/grimoires/loa/lore/index.yaml"
+    local lore_patterns="$PROJECT_ROOT/grimoires/loa/lore/patterns.yaml"
+    if command -v yq &>/dev/null && [[ -f "$lore_patterns" ]]; then
+      # Determine relevant tags from changed files
+      local lore_tags=()
+      local changed_paths
+      changed_paths=$(git diff --name-only "origin/main...HEAD" 2>/dev/null || echo "")
+      if echo "$changed_paths" | grep -q "scripts/"; then
+        lore_tags+=(pipeline review)
+      fi
+      if echo "$changed_paths" | grep -q "lore/"; then
+        lore_tags+=(governance architecture)
+      fi
+      if echo "$changed_paths" | grep -q "skills/"; then
+        lore_tags+=(architecture pattern)
+      fi
+
+      if [[ ${#lore_tags[@]} -gt 0 ]]; then
+        # Load matching lore entries by tag
+        local tag_filter
+        tag_filter=$(printf '"%s",' "${lore_tags[@]}")
+        tag_filter="[${tag_filter%,}]"
+        lore_context=$(yq -o=json '.' "$lore_patterns" 2>/dev/null | \
+          jq -r --argjson tags "$tag_filter" '
+            [.[] | select(.tags as $t | ($tags | any(. as $tag | $t | index($tag))))] |
+            .[] | "LORE[\(.id)]: \(.short)"
+          ' 2>/dev/null || echo "")
+
+        if [[ -n "$lore_context" ]]; then
+          local lore_count
+          lore_count=$(echo "$lore_context" | wc -l)
+          echo "[LORE] Loaded $lore_count relevant pattern(s) for review context"
+          export BRIDGE_LORE_CONTEXT="$lore_context"
+        fi
+      fi
+    fi
+
     # 2e: Bridgebuilder Review
     if [[ -n "$BRIDGE_CONTEXT" ]]; then
       echo "[CONTEXT] QMD context loaded (${#BRIDGE_CONTEXT} bytes)"

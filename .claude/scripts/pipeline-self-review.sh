@@ -88,6 +88,44 @@ resolve_pipeline_sdd() {
     ' "$PIPELINE_MAP" 2>/dev/null | head -1
 }
 
+# Check if a changed file matches a constitutional pattern (T2.1, cycle-047)
+is_constitutional_change() {
+    local changed_file="$1"
+
+    if [[ ! -f "$PIPELINE_MAP" ]]; then
+        return 1
+    fi
+
+    local result
+    result=$(jq -r --arg file "$changed_file" '
+        .patterns[] |
+        .glob as $g |
+        select(
+            .constitutional == true and
+            ($file | test(
+                $g | gsub("\\."; "\\.") | gsub("\\*\\*"; ".*") | gsub("\\*"; "[^/]*") | gsub("\\?"; ".") | ("^" + . + "$")
+            ))
+        ) |
+        .label
+    ' "$PIPELINE_MAP" 2>/dev/null | head -1)
+
+    [[ -n "$result" ]]
+}
+
+# Reverse SDD mapping: given an SDD path, return all globs governed by it (T2.2, cycle-047)
+resolve_governed_implementations() {
+    local sdd_path="$1"
+
+    if [[ ! -f "$PIPELINE_MAP" ]]; then
+        error "Pipeline SDD map not found: $PIPELINE_MAP"
+        return 1
+    fi
+
+    jq -r --arg sdd "$sdd_path" '
+        .patterns[] | select(.sdd == $sdd) | .glob
+    ' "$PIPELINE_MAP" 2>/dev/null
+}
+
 # Resolve all unique SDDs for a list of changed files
 resolve_all_sdds() {
     local changes="$1"
@@ -121,6 +159,7 @@ main() {
     local base_branch="main"
     local output_dir=""
     local dry_run=false
+    local reverse_sdd=""
 
     # Parse arguments
     while [[ $# -gt 0 ]]; do
@@ -128,8 +167,10 @@ main() {
             --base-branch) base_branch="$2"; shift 2 ;;
             --output-dir)  output_dir="$2"; shift 2 ;;
             --dry-run)     dry_run=true; shift ;;
+            --reverse)     reverse_sdd="$2"; shift 2 ;;
             -h|--help)
                 echo "Usage: pipeline-self-review.sh --base-branch <branch> --output-dir <path>"
+                echo "       pipeline-self-review.sh --reverse <sdd-path>"
                 exit 0
                 ;;
             *)
@@ -138,6 +179,12 @@ main() {
                 ;;
         esac
     done
+
+    # Reverse mapping mode (T2.2, cycle-047)
+    if [[ -n "$reverse_sdd" ]]; then
+        resolve_governed_implementations "$reverse_sdd"
+        exit 0
+    fi
 
     if [[ -z "$output_dir" ]]; then
         error "Output directory required (--output-dir)"
@@ -169,6 +216,16 @@ main() {
     local change_count
     change_count=$(echo "$changes" | wc -l)
     log "Detected $change_count pipeline file(s) changed"
+
+    # Check for constitutional changes (T2.1, cycle-047)
+    local constitutional_changes=()
+    while IFS= read -r file; do
+        [[ -z "$file" ]] && continue
+        if is_constitutional_change "$file"; then
+            constitutional_changes+=("$file")
+            log "CONSTITUTIONAL CHANGE detected: $file"
+        fi
+    done <<< "$changes"
 
     # Resolve governing SDDs
     local sdds
@@ -248,16 +305,26 @@ main() {
 
     log "Pipeline self-review complete: $total_findings total divergence finding(s) across $sdd_count SDD(s)"
 
-    # Write summary
+    # Write summary (includes constitutional markers, T2.1 cycle-047)
+    local constitutional_count=${#constitutional_changes[@]}
+    local constitutional_json="[]"
+    if [[ $constitutional_count -gt 0 ]]; then
+        constitutional_json=$(printf '%s\n' "${constitutional_changes[@]}" | jq -R . | jq -s .)
+    fi
+
     jq -n \
         --argjson total_findings "$total_findings" \
         --argjson sdd_count "$sdd_count" \
         --argjson change_count "$change_count" \
+        --argjson constitutional_count "$constitutional_count" \
+        --argjson constitutional_files "$constitutional_json" \
         '{
             type: "pipeline_self_review",
             pipeline_files_changed: $change_count,
             sdds_reviewed: $sdd_count,
-            total_divergence_findings: $total_findings
+            total_divergence_findings: $total_findings,
+            constitutional_changes: $constitutional_count,
+            constitutional_files: $constitutional_files
         }' > "$output_dir/pipeline-self-review-summary.json"
     chmod 600 "$output_dir/pipeline-self-review-summary.json"
 }
