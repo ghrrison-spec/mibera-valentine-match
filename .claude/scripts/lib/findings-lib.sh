@@ -87,11 +87,9 @@ extract_prior_findings() {
 strip_code_fences() {
     local input="$1"
 
-    if echo "$input" | head -1 | grep -qE '^[[:space:]]*```'; then
-        # Case (a): first line is a code fence
-        echo "$input" | awk '/^[[:space:]]*```/{if(f){exit}else{f=1;next}} f'
-    elif echo "$input" | grep -qE '^[[:space:]]*```'; then
-        # Case (b): preamble text before fence
+    if echo "$input" | grep -qE '^[[:space:]]*```'; then
+        # Extract content between first pair of code fences (handles both
+        # leading fence and preamble-before-fence cases identically)
         echo "$input" | awk '/^[[:space:]]*```/{if(f){exit}else{f=1;next}} f'
     else
         # No fences found — return as-is

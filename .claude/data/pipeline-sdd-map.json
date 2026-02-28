@@ -110,6 +110,12 @@
       "sdd": ".claude/skills/run-bridge/SKILL.md",
       "label": "Pipeline Self-Review",
       "sections": ["PIPELINE_SELF_REVIEW", "SDD Resolution"]
+    },
+    {
+      "glob": ".claude/scripts/lib/*.sh",
+      "sdd": ".claude/skills/run-bridge/SKILL.md",
+      "label": "Shared Pipeline Libraries",
+      "sections": ["Workflow", "Review", "Findings"]
     }
   ]
 }

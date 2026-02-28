@@ -93,6 +93,7 @@ resolve_pipeline_sdd() {
 }
 
 # Check if a changed file matches a constitutional pattern (T2.1, cycle-047)
+# Also detects renames of constitutional files (HIGH-2 fix, bridge-iter2)
 is_constitutional_change() {
     local changed_file="$1"
 
@@ -114,6 +115,27 @@ is_constitutional_change() {
     ' "$PIPELINE_MAP" 2>/dev/null | head -1)
 
     [[ -n "$result" ]]
+}
+
+# Detect renamed constitutional files via git rename tracking (HIGH-2 fix)
+detect_constitutional_renames() {
+    local base_branch="${1:-main}"
+
+    git diff --name-status --diff-filter=R "$base_branch"...HEAD -- \
+        '.claude/scripts/' \
+        '.claude/skills/' \
+        '.claude/data/' \
+        '.claude/protocols/' \
+        2>/dev/null | while IFS=$'\t' read -r status old_path new_path; do
+        # Check if the OLD path was constitutional (rename away from governed file)
+        if is_constitutional_change "$old_path" 2>/dev/null; then
+            echo "RENAME:$old_path->$new_path"
+        fi
+        # Check if the NEW path is constitutional (rename into governed file)
+        if is_constitutional_change "$new_path" 2>/dev/null; then
+            echo "RENAME:$old_path->$new_path"
+        fi
+    done | sort -u
 }
 
 # Reverse SDD mapping: given an SDD path, return all globs governed by it (T2.2, cycle-047)
@@ -230,6 +252,17 @@ main() {
             log "CONSTITUTIONAL CHANGE detected: $file"
         fi
     done <<< "$changes"
+
+    # Detect constitutional renames (HIGH-2 fix, bridge-iter2)
+    local renames
+    renames=$(detect_constitutional_renames "$base_branch")
+    if [[ -n "$renames" ]]; then
+        while IFS= read -r rename_entry; do
+            [[ -z "$rename_entry" ]] && continue
+            constitutional_changes+=("$rename_entry")
+            log "CONSTITUTIONAL RENAME detected: $rename_entry"
+        done <<< "$renames"
+    fi
 
     # Resolve governing SDDs
     local sdds

@@ -73,7 +73,7 @@ read_config() {
 # Adaptive Budget Computation (T4.1, cycle-047)
 # =============================================================================
 
-# Compute per-channel budget weighted by input size. Larger inputs get
+# Compute per-channel budgets weighted by input size. Larger inputs get
 # proportionally more budget, with a floor of 4000 chars per channel.
 #
 # Args:
@@ -84,7 +84,8 @@ read_config() {
 #   $5+ - prior findings paths (optional)
 #
 # Returns:
-#   Maximum chars for the largest channel (used as budget_per_channel)
+#   Colon-separated per-channel budgets: "sdd_budget:diff_budget:prior_budget"
+#   (prior_budget is 0 when channels=2)
 compute_adaptive_budget() {
     local total_budget="$1"
     local channels="$2"
@@ -100,37 +101,44 @@ compute_adaptive_budget() {
     local sdd_size=0 diff_size=0 prior_size=0
     [[ -f "$sdd_path" ]] && sdd_size=$(wc -c < "$sdd_path" 2>/dev/null || echo "0")
     [[ -f "$diff_path" ]] && diff_size=$(wc -c < "$diff_path" 2>/dev/null || echo "0")
-    for pp in "${prior_paths[@]:-}"; do
-        [[ -n "${pp:-}" && -f "$pp" ]] && prior_size=$((prior_size + $(wc -c < "$pp" 2>/dev/null || echo "0")))
-    done
+    if [[ ${#prior_paths[@]} -gt 0 ]]; then
+        for pp in "${prior_paths[@]}"; do
+            [[ -n "${pp:-}" && -f "$pp" ]] && prior_size=$((prior_size + $(wc -c < "$pp" 2>/dev/null || echo "0")))
+        done
+    fi
 
     local total_input=$((sdd_size + diff_size + prior_size))
     if [[ $total_input -eq 0 ]]; then
         # Fallback to equal split
-        echo $(( total_chars / channels ))
+        local equal=$((total_chars / channels))
+        echo "${equal}:${equal}:0"
         return
     fi
 
-    # Weight budget proportionally to input size, capped at total_chars
-    # The largest channel gets the most budget
+    # Weight budget proportionally to input size
     local sdd_budget=$((total_chars * sdd_size / total_input))
     local diff_budget=$((total_chars * diff_size / total_input))
+    local prior_budget=0
+    if [[ $channels -eq 3 ]]; then
+        prior_budget=$((total_chars * prior_size / total_input))
+    fi
 
     # Apply floor
     [[ $sdd_budget -lt $floor ]] && sdd_budget=$floor
     [[ $diff_budget -lt $floor ]] && diff_budget=$floor
+    [[ $prior_budget -lt $floor && $channels -eq 3 ]] && prior_budget=$floor
 
-    # Return the largest channel budget (used as max_section_chars)
-    local max_budget=$sdd_budget
-    [[ $diff_budget -gt $max_budget ]] && max_budget=$diff_budget
-    if [[ $channels -eq 3 ]]; then
-        local prior_budget=$((total_chars * prior_size / total_input))
-        [[ $prior_budget -lt $floor ]] && prior_budget=$floor
-        [[ $prior_budget -gt $max_budget ]] && max_budget=$prior_budget
+    # Overcommit check: if sum of floors > total_chars, fall back to equal split
+    local floor_sum=$((sdd_budget + diff_budget + prior_budget))
+    if [[ $floor_sum -gt $total_chars ]]; then
+        log "WARNING: Adaptive budget floors exceed total ($floor_sum > $total_chars), falling back to equal split"
+        local equal=$((total_chars / channels))
+        echo "${equal}:${equal}:$(( channels == 3 ? equal : 0 ))"
+        return
     fi
 
-    log "Adaptive budget: SDD=$sdd_budget, diff=$diff_budget${channels:+, prior=${prior_budget:-0}} (total input: $total_input chars)"
-    echo "$max_budget"
+    log "Adaptive budget: SDD=$sdd_budget, diff=$diff_budget, prior=$prior_budget (total input: $total_input chars)"
+    echo "${sdd_budget}:${diff_budget}:${prior_budget}"
 }
 
 # =============================================================================
@@ -232,22 +240,38 @@ main() {
     fi
 
     # Adaptive budget: weight channels by input size (T4.1, cycle-047)
+    # Per-channel budgets: sdd_budget, diff_budget, prior_budget
     local adaptive_enabled
     adaptive_enabled=$(read_config '.red_team.adaptive_budget.enabled' 'false')
     local budget_mode="equal"
     local max_section_chars=$(( token_budget * 4 / input_channels ))
+    local sdd_char_budget=$max_section_chars
+    local diff_char_budget=$max_section_chars
+    local prior_char_budget=$max_section_chars
 
     if [[ "$adaptive_enabled" == "true" ]]; then
         budget_mode="adaptive"
-        max_section_chars=$(compute_adaptive_budget "$token_budget" "$input_channels" "$sdd_path" "$diff_path" "${prior_findings_paths[@]:-}")
+        local budget_str
+        budget_str=$(compute_adaptive_budget "$token_budget" "$input_channels" "$sdd_path" "$diff_path" "${prior_findings_paths[@]:-}")
+        sdd_char_budget=$(echo "$budget_str" | cut -d: -f1)
+        diff_char_budget=$(echo "$budget_str" | cut -d: -f2)
+        prior_char_budget=$(echo "$budget_str" | cut -d: -f3)
+        # max_section_chars used as reporting metric (largest channel)
+        max_section_chars=$sdd_char_budget
+        [[ $diff_char_budget -gt $max_section_chars ]] && max_section_chars=$diff_char_budget
+        [[ $prior_char_budget -gt $max_section_chars ]] && max_section_chars=$prior_char_budget
     fi
 
-    [[ $max_section_chars -gt 100000 ]] && max_section_chars=100000  # cap at 100K chars
-    [[ $max_section_chars -lt 4000 ]] && max_section_chars=4000      # floor at 4K chars
-    log "Extracting SDD security sections from: $sdd_path (max $max_section_chars chars)"
+    # Apply global caps/floors
+    for var in sdd_char_budget diff_char_budget prior_char_budget max_section_chars; do
+        eval "local v=\$$var"
+        [[ $v -gt 100000 ]] && eval "$var=100000"
+        [[ $v -lt 4000 ]] && eval "$var=4000"
+    done
+    log "Extracting SDD security sections from: $sdd_path (max $sdd_char_budget chars)"
     local security_sections
     local extract_exit=0
-    security_sections=$(extract_security_sections "$sdd_path" "$max_section_chars") || extract_exit=$?
+    security_sections=$(extract_security_sections "$sdd_path" "$sdd_char_budget") || extract_exit=$?
     if [[ $extract_exit -ne 0 ]]; then
         if [[ $extract_exit -eq 3 ]]; then
             log "No security sections found in SDD, skipping"
@@ -285,9 +309,9 @@ main() {
 
     local diff_chars=${#code_diff}
     # Truncate diff to remaining token budget (same budget split as sections)
-    if [[ $diff_chars -gt $max_section_chars ]]; then
-        code_diff="${code_diff:0:$max_section_chars}"$'\n[... diff truncated to token budget ...]'
-        log "Code diff: $diff_chars characters (truncated to $max_section_chars)"
+    if [[ $diff_chars -gt $diff_char_budget ]]; then
+        code_diff="${code_diff:0:$diff_char_budget}"$'\n[... diff truncated to token budget ...]'
+        log "Code diff: $diff_chars characters (truncated to $diff_char_budget)"
     else
         log "Code diff: $diff_chars characters"
     fi
@@ -350,7 +374,7 @@ PROMPT
         local prior_content=""
         for pf_path in "${prior_findings_paths[@]}"; do
             local pf_extracted
-            pf_extracted=$(extract_prior_findings "$pf_path" "$max_section_chars")
+            pf_extracted=$(extract_prior_findings "$pf_path" "$prior_char_budget")
             if [[ -n "$pf_extracted" ]]; then
                 local pf_name
                 pf_name=$(basename "$pf_path")
@@ -359,9 +383,9 @@ PROMPT
         done
         if [[ -n "$prior_content" ]]; then
             local prior_chars=${#prior_content}
-            if [[ $prior_chars -gt $max_section_chars ]]; then
-                prior_content="${prior_content:0:$max_section_chars}"$'\n[... prior findings truncated to token budget ...]\n'
-                log "Prior findings: $prior_chars chars (truncated to $max_section_chars)"
+            if [[ $prior_chars -gt $prior_char_budget ]]; then
+                prior_content="${prior_content:0:$prior_char_budget}"$'\n[... prior findings truncated to token budget ...]\n'
+                log "Prior findings: $prior_chars chars (truncated to $prior_char_budget)"
             else
                 log "Prior findings: $prior_chars chars from ${#prior_findings_paths[@]} files"
             fi

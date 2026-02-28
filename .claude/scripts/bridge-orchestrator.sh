@@ -368,7 +368,7 @@ bridge_main() {
       if [[ -x "$SCRIPT_DIR/cross-repo-query.sh" ]]; then
         local diff_file
         diff_file=$(mktemp "${TMPDIR:-/tmp}/bridge-diff.XXXXXX")
-        git diff "origin/main...HEAD" > "$diff_file" 2>/dev/null || true
+        git diff "main...HEAD" > "$diff_file" 2>/dev/null || true
 
         if [[ -s "$diff_file" ]]; then
           local xr_budget xr_max_repos xr_timeout
@@ -411,7 +411,7 @@ bridge_main() {
       if [[ -x "$SCRIPT_DIR/bridge-vision-capture.sh" ]]; then
         local vcheck_diff
         vcheck_diff=$(mktemp "${TMPDIR:-/tmp}/bridge-vcheck.XXXXXX")
-        git diff "origin/main...HEAD" > "$vcheck_diff" 2>/dev/null || true
+        git diff "main...HEAD" > "$vcheck_diff" 2>/dev/null || true
 
         if [[ -s "$vcheck_diff" ]]; then
           local relevant_visions
@@ -448,7 +448,7 @@ bridge_main() {
       # Determine relevant tags from changed files
       local lore_tags=()
       local changed_paths
-      changed_paths=$(git diff --name-only "origin/main...HEAD" 2>/dev/null || echo "")
+      changed_paths=$(git diff --name-only "main...HEAD" 2>/dev/null || echo "")
       if echo "$changed_paths" | grep -q "scripts/"; then
         lore_tags+=(pipeline review)
       fi
@@ -544,6 +544,11 @@ bridge_main() {
     if [[ -n "$meta_files" ]]; then
       local total_input_chars=0 total_output_chars=0 invocation_count=0
       for meta_file in $meta_files; do
+        # Validate metadata file is well-formed JSON with expected fields (MEDIUM-3 fix)
+        if ! jq -e '.char_counts' "$meta_file" &>/dev/null; then
+          echo "[COST] WARNING: Malformed metadata, skipping: $meta_file" >&2
+          continue
+        fi
         local sdd_c diff_c prior_c
         sdd_c=$(jq '.char_counts.sdd // 0' "$meta_file" 2>/dev/null) || sdd_c=0
         diff_c=$(jq '.char_counts.diff // 0' "$meta_file" 2>/dev/null) || diff_c=0
