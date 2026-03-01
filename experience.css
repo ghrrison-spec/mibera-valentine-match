@@ -1,0 +1,913 @@
+/* =========================================================
+   Mibera Experience — Dark Gothic Stylesheet
+   Sprint 1 — TASK-1.6
+   ========================================================= */
+
+/* === Design Tokens === */
+:root {
+  --bg-primary:       #0a0a0a;
+  --bg-card:          #0f0f12;
+  --bg-input:         #0c0c10;
+  --bg-card-hover:    #14141a;
+  --accent-crimson:   #8b1a3a;
+  --accent-blood:     #6b0f2a;
+  --accent-rose:      #a32255;
+  --accent-amber:     #c49a1a;
+  --accent-violet:    #5c2175;
+  --accent-glow:      rgba(139, 26, 58, 0.5);
+  --text-primary:     #d8d0d4;
+  --text-secondary:   #7a6e74;
+  --text-muted:       #4a3f44;
+  --text-accent:      #c49a1a;
+  --border-dim:       rgba(139, 26, 58, 0.15);
+  --border-mid:       rgba(139, 26, 58, 0.3);
+  --border-bright:    rgba(139, 26, 58, 0.6);
+  --glow-crimson:     0 0 20px rgba(139, 26, 58, 0.5), 0 0 60px rgba(139, 26, 58, 0.15);
+  --glow-amber:       0 0 20px rgba(196, 154, 26, 0.4);
+  --radius:           3px;
+  --font-heading:     'Cinzel', Georgia, serif;
+  --font-body:        'Crimson Text', Georgia, serif;
+  --transition:       0.2s ease;
+}
+
+/* === Reset === */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* === Background Layers === */
+#bg-canvas {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.noise-overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.08;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='5' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 512px 512px;
+  mix-blend-mode: overlay;
+}
+
+.vignette {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: 1;
+  pointer-events: none;
+  background: radial-gradient(ellipse at center, transparent 30%, rgba(10, 10, 10, 0.9) 100%);
+}
+
+/* === Base === */
+body {
+  font-family: var(--font-body);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  overflow-x: hidden;
+  font-size: 18px;
+  line-height: 1.6;
+}
+
+body > *:not(#bg-canvas):not(.noise-overlay):not(.vignette) {
+  position: relative;
+  z-index: 2;
+}
+
+/* === Accessibility === */
+.sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+.site-header {
+  width: 100%;
+  max-width: 800px;
+  text-align: center;
+  padding: 4rem 1.5rem 2rem;
+}
+
+.site-super {
+  font-family: var(--font-heading);
+  font-size: 0.75rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 1rem;
+}
+
+.site-title {
+  font-family: var(--font-heading);
+  font-size: clamp(2.5rem, 8vw, 4.5rem);
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  color: var(--text-primary);
+  text-shadow: var(--glow-crimson);
+  line-height: 1.1;
+  margin-bottom: 0.75rem;
+}
+
+.site-sub {
+  font-size: 1rem;
+  font-style: italic;
+  color: var(--text-secondary);
+  letter-spacing: 0.05em;
+}
+
+/* =========================================================
+   STEPS
+   ========================================================= */
+.step {
+  width: 100%;
+  max-width: 800px;
+  padding: 2rem 1.5rem;
+  animation: fadeIn 0.5s ease;
+}
+
+.step-inner {
+  background: var(--bg-card);
+  border: 1px solid var(--border-dim);
+  border-radius: var(--radius);
+  padding: 2rem;
+}
+
+.step-inner--full {
+  padding: 0;
+  background: transparent;
+  border: none;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.step-heading {
+  font-family: var(--font-heading);
+  font-size: 1.3rem;
+  letter-spacing: 0.12em;
+  color: var(--text-primary);
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.step-number {
+  display: inline-block;
+  width: 1.8rem; height: 1.8rem;
+  border: 1px solid var(--border-mid);
+  border-radius: 50%;
+  font-size: 0.7rem;
+  text-align: center;
+  line-height: 1.8rem;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.step-desc {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  margin-bottom: 1.5rem;
+}
+
+.step-continue {
+  margin-top: 1.5rem;
+  text-align: center;
+}
+
+/* =========================================================
+   STEP 1: LOOKUP
+   ========================================================= */
+.token-input-row {
+  display: flex;
+  gap: 0.75rem;
+}
+
+#token-input {
+  flex: 1;
+  background: var(--bg-input);
+  border: 1px solid var(--border-mid);
+  border-radius: var(--radius);
+  padding: 0.75rem 1rem;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  color: var(--text-primary);
+  outline: none;
+  transition: border-color var(--transition), box-shadow var(--transition);
+  -moz-appearance: textfield;
+}
+
+#token-input::-webkit-outer-spin-button,
+#token-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
+
+#token-input::placeholder {
+  color: var(--text-muted);
+}
+
+#token-input:focus {
+  border-color: var(--border-bright);
+  box-shadow: var(--glow-crimson);
+}
+
+/* =========================================================
+   BUTTONS
+   ========================================================= */
+.btn-primary {
+  font-family: var(--font-heading);
+  font-size: 0.8rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-primary);
+  background: transparent;
+  border: 1px solid var(--border-bright);
+  border-radius: var(--radius);
+  padding: 0.75rem 1.5rem;
+  cursor: pointer;
+  transition: box-shadow var(--transition), border-color var(--transition);
+  white-space: nowrap;
+  min-height: 44px;
+}
+
+.btn-primary:hover {
+  box-shadow: var(--glow-crimson);
+  border-color: var(--accent-crimson);
+}
+
+.btn-primary:active {
+  opacity: 0.8;
+}
+
+.btn-secondary {
+  font-family: var(--font-heading);
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  background: transparent;
+  border: 1px solid var(--border-dim);
+  border-radius: var(--radius);
+  padding: 0.65rem 1.25rem;
+  cursor: pointer;
+  transition: box-shadow var(--transition), border-color var(--transition), color var(--transition);
+  min-height: 44px;
+}
+
+.btn-secondary:hover {
+  border-color: var(--border-mid);
+  color: var(--text-primary);
+}
+
+.btn-begin {
+  font-family: var(--font-heading);
+  font-size: 1.1rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--bg-primary);
+  background: var(--accent-crimson);
+  border: none;
+  border-radius: var(--radius);
+  padding: 1rem 2.5rem;
+  cursor: pointer;
+  transition: box-shadow var(--transition), background var(--transition);
+  min-height: 56px;
+  display: none;
+}
+
+.btn-begin.visible {
+  display: inline-block;
+}
+
+.btn-begin:hover:not(:disabled) {
+  background: var(--accent-rose);
+  box-shadow: var(--glow-crimson);
+}
+
+.btn-begin:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* =========================================================
+   LOADING + ERROR STATES
+   ========================================================= */
+.loading-state {
+  margin-top: 1.5rem;
+  text-align: center;
+  color: var(--text-secondary);
+  font-style: italic;
+}
+
+.loader {
+  width: 28px; height: 28px;
+  border: 2px solid var(--border-dim);
+  border-top-color: var(--accent-crimson);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin: 0 auto 0.75rem;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.error-state {
+  margin-top: 1rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid rgba(139, 26, 58, 0.4);
+  border-radius: var(--radius);
+  background: rgba(139, 26, 58, 0.08);
+  color: #c97070;
+  font-size: 0.95rem;
+}
+
+/* =========================================================
+   STEP 2: MIBERA CARD
+   ========================================================= */
+.mibera-card {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.mibera-portrait-wrap {
+  width: 160px;
+  height: 160px;
+  flex-shrink: 0;
+  border: 1px solid var(--border-mid);
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--bg-input);
+}
+
+.mibera-portrait {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.portrait-fallback {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  opacity: 0.4;
+}
+
+.portrait-fallback svg {
+  width: 100%;
+  height: 100%;
+}
+
+.mibera-name {
+  font-family: var(--font-heading);
+  font-size: 1.1rem;
+  letter-spacing: 0.08em;
+  color: var(--text-primary);
+  margin-bottom: 0.2rem;
+}
+
+.mibera-number {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-bottom: 1rem;
+  letter-spacing: 0.05em;
+}
+
+.trait-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.35rem 1rem;
+}
+
+.trait-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.trait-label {
+  font-size: 0.65rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  font-family: var(--font-heading);
+}
+
+.trait-value {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.trait-value--key {
+  color: var(--text-accent);
+}
+
+.trait-value--drug {
+  color: var(--accent-rose);
+  font-style: italic;
+}
+
+.lore-drug-card {
+  margin-top: 1rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--border-mid);
+  border-radius: var(--radius);
+  background: rgba(139, 26, 58, 0.06);
+}
+
+.lore-drug-label {
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  font-family: var(--font-heading);
+  margin-bottom: 0.25rem;
+}
+
+.lore-drug-name {
+  font-family: var(--font-heading);
+  font-size: 1rem;
+  color: var(--accent-rose);
+  letter-spacing: 0.06em;
+  margin-bottom: 0.2rem;
+}
+
+.lore-drug-tarot {
+  font-size: 0.85rem;
+  font-style: italic;
+  color: var(--text-secondary);
+}
+
+/* =========================================================
+   STEP 3: DRUG PICKER
+   ========================================================= */
+.drug-search-wrap {
+  margin-bottom: 1rem;
+}
+
+.drug-search-input {
+  width: 100%;
+  background: var(--bg-input);
+  border: 1px solid var(--border-mid);
+  border-radius: var(--radius);
+  padding: 0.7rem 1rem;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  color: var(--text-primary);
+  outline: none;
+  transition: border-color var(--transition), box-shadow var(--transition);
+}
+
+.drug-search-input::placeholder { color: var(--text-muted); }
+.drug-search-input:focus {
+  border-color: var(--border-bright);
+  box-shadow: var(--glow-crimson);
+}
+
+.drug-categories {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-bottom: 1rem;
+}
+
+.cat-filter {
+  font-family: var(--font-heading);
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  background: transparent;
+  border: 1px solid var(--border-dim);
+  border-radius: 20px;
+  padding: 0.35rem 0.8rem;
+  cursor: pointer;
+  transition: all var(--transition);
+  min-height: 30px;
+}
+
+.cat-filter:hover {
+  border-color: var(--border-mid);
+  color: var(--text-secondary);
+}
+
+.cat-filter.active {
+  border-color: var(--border-bright);
+  color: var(--text-primary);
+  background: rgba(139, 26, 58, 0.1);
+}
+
+.drug-list {
+  max-height: 360px;
+  overflow-y: auto;
+  border: 1px solid var(--border-dim);
+  border-radius: var(--radius);
+  margin-bottom: 1.25rem;
+  scrollbar-width: thin;
+  scrollbar-color: var(--accent-blood) var(--bg-input);
+}
+
+.drug-list::-webkit-scrollbar { width: 5px; }
+.drug-list::-webkit-scrollbar-track { background: var(--bg-input); }
+.drug-list::-webkit-scrollbar-thumb { background: var(--accent-blood); border-radius: 2px; }
+
+.drug-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  border-bottom: 1px solid var(--border-dim);
+  transition: background var(--transition);
+  min-height: 48px;
+  user-select: none;
+}
+
+.drug-item:last-child { border-bottom: none; }
+.drug-item:hover { background: rgba(139, 26, 58, 0.08); }
+.drug-item.selected {
+  background: rgba(139, 26, 58, 0.15);
+  border-left: 3px solid var(--accent-crimson);
+  padding-left: calc(1rem - 3px);
+}
+
+.drug-item-name {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  color: var(--text-primary);
+  flex: 1;
+  line-height: 1.3;
+}
+
+.drug-item-lore {
+  font-size: 0.7rem;
+  font-family: var(--font-heading);
+  letter-spacing: 0.08em;
+  color: var(--text-accent);
+  white-space: nowrap;
+}
+
+.cat-badge {
+  font-size: 0.6rem;
+  font-family: var(--font-heading);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.15rem 0.5rem;
+  border-radius: 2px;
+  white-space: nowrap;
+  opacity: 0.85;
+}
+
+/* Category badge colours */
+.cat-badge--psychedelic  { background: rgba(153, 0, 255, 0.2);  color: #cc66ff; }
+.cat-badge--empathogen   { background: rgba(255, 102, 153, 0.2); color: #ff99bb; }
+.cat-badge--stimulant    { background: rgba(255, 153, 0, 0.2);   color: #ffcc66; }
+.cat-badge--dissociative { background: rgba(102, 102, 204, 0.2); color: #9999ee; }
+.cat-badge--depressant   { background: rgba(102, 68, 34, 0.25);  color: #cc9966; }
+.cat-badge--cannabinoid  { background: rgba(51, 102, 0, 0.2);    color: #99cc33; }
+.cat-badge--entheogen    { background: rgba(0, 153, 102, 0.2);   color: #33cc99; }
+.cat-badge--adaptogen    { background: rgba(68, 102, 136, 0.2);  color: #99aacc; }
+.cat-badge--deliriant    { background: rgba(136, 0, 51, 0.25);   color: #cc3366; }
+.cat-badge--other        { background: rgba(80, 80, 80, 0.2);    color: #aaaaaa; }
+
+.drug-empty {
+  padding: 2rem;
+  text-align: center;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.drug-detail {
+  background: rgba(15, 15, 18, 0.9);
+  border: 1px solid var(--border-mid);
+  border-radius: var(--radius);
+  padding: 1.25rem;
+}
+
+.drug-detail-name {
+  font-family: var(--font-heading);
+  font-size: 1.1rem;
+  letter-spacing: 0.08em;
+  color: var(--text-primary);
+  margin-bottom: 0.25rem;
+}
+
+.drug-detail-cat {
+  font-size: 0.75rem;
+  font-family: var(--font-heading);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 0.75rem;
+}
+
+.drug-detail-summary {
+  font-size: 0.95rem;
+  font-style: italic;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin-bottom: 0.75rem;
+}
+
+.drug-detail-intensity {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.intensity-label {
+  font-size: 0.65rem;
+  font-family: var(--font-heading);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  width: 56px;
+  flex-shrink: 0;
+}
+
+.intensity-bar {
+  flex: 1;
+  height: 4px;
+  background: var(--border-dim);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.intensity-fill {
+  height: 100%;
+  background: var(--accent-crimson);
+  transition: width 0.4s ease;
+}
+
+.intensity-num {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  width: 24px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.drug-detail-tarot {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.lore-badge-inline {
+  display: inline-block;
+  font-family: var(--font-heading);
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  color: var(--text-accent);
+  border: 1px solid rgba(196, 154, 26, 0.4);
+  border-radius: 2px;
+  padding: 0.05rem 0.3rem;
+  vertical-align: middle;
+}
+
+/* =========================================================
+   STEP 4: DOSE SELECTOR
+   ========================================================= */
+.dose-buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.dose-btn {
+  font-family: var(--font-body);
+  background: var(--bg-input);
+  border: 1px solid var(--border-dim);
+  border-radius: var(--radius);
+  padding: 1.25rem 1rem;
+  cursor: pointer;
+  text-align: center;
+  transition: all var(--transition);
+  min-height: 100px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.dose-btn:hover {
+  border-color: var(--border-mid);
+  background: var(--bg-card-hover);
+}
+
+.dose-btn.selected,
+.dose-btn[aria-pressed="true"] {
+  border-color: var(--border-bright);
+  background: rgba(139, 26, 58, 0.12);
+  box-shadow: var(--glow-crimson);
+}
+
+.dose-title {
+  font-family: var(--font-heading);
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-primary);
+  display: block;
+}
+
+.dose-desc {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  font-style: italic;
+  display: block;
+  line-height: 1.4;
+}
+
+.dose-btn.selected .dose-title,
+.dose-btn[aria-pressed="true"] .dose-title {
+  color: var(--accent-rose);
+}
+
+.begin-wrap {
+  text-align: center;
+  min-height: 60px;
+}
+
+/* =========================================================
+   STEP 5: EXPERIENCE CANVAS
+   ========================================================= */
+.experience-canvas-wrap {
+  position: relative;
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto 1.5rem;
+  border: 1px solid var(--border-mid);
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: #000;
+}
+
+#trip-canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.trip-overlay {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+}
+
+.trip-narrative {
+  max-width: 600px;
+  margin: 0 auto 1.5rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border-dim);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.narrative-section {
+  padding: 1.25rem;
+  border-bottom: 1px solid var(--border-dim);
+}
+
+.narrative-section:last-child { border-bottom: none; }
+
+.narrative-label {
+  font-family: var(--font-heading);
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 0.5rem;
+}
+
+.narrative-text {
+  font-size: 1rem;
+  font-style: italic;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+
+.experience-controls {
+  text-align: center;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* =========================================================
+   FOOTER
+   ========================================================= */
+.site-footer {
+  width: 100%;
+  max-width: 800px;
+  padding: 2rem 1.5rem 3rem;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  margin-top: auto;
+}
+
+.footer-link {
+  color: var(--text-muted);
+  text-decoration: none;
+  border-bottom: 1px solid var(--border-dim);
+  transition: color var(--transition);
+}
+
+.footer-link:hover {
+  color: var(--text-secondary);
+}
+
+/* =========================================================
+   RESPONSIVE — 375px mobile
+   ========================================================= */
+@media (max-width: 600px) {
+  .site-header {
+    padding: 2.5rem 1rem 1.5rem;
+  }
+
+  .step {
+    padding: 1rem;
+  }
+
+  .step-inner {
+    padding: 1.25rem 1rem;
+  }
+
+  .mibera-card {
+    grid-template-columns: 1fr;
+  }
+
+  .mibera-portrait-wrap {
+    width: 120px;
+    height: 120px;
+  }
+
+  .trait-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .dose-buttons {
+    grid-template-columns: 1fr;
+  }
+
+  .dose-btn {
+    min-height: 72px;
+  }
+
+  .drug-categories {
+    gap: 0.3rem;
+  }
+
+  .cat-filter {
+    font-size: 0.6rem;
+    padding: 0.3rem 0.6rem;
+  }
+
+  .token-input-row {
+    flex-direction: column;
+  }
+
+  #token-input,
+  .btn-primary {
+    width: 100%;
+  }
+}
+
+@media (max-width: 430px) {
+  .site-title {
+    font-size: 2.2rem;
+  }
+}

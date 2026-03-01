@@ -1,0 +1,568 @@
+{
+  "_meta": {
+    "version": "1.0.0",
+    "note": "Tarot rules are keyed on DRUG SLUG, not a tarot column \u2014 derive via codex-drugs.json connections.tarot"
+  },
+  "ancestors": {
+    "aboriginal": {
+      "add_effects": [
+        "mandala",
+        "sacredGeometry"
+      ],
+      "palette_tint": "earth",
+      "paranoia_boost": -1,
+      "intensity_mult": 1.2,
+      "lore": "Dreamtime, 40k year shamanism"
+    },
+    "native american": {
+      "add_effects": [
+        "mandala"
+      ],
+      "palette_tint": "earth",
+      "paranoia_boost": -1,
+      "intensity_mult": 1.1,
+      "lore": "Indigenous futurism, plant medicine"
+    },
+    "mayan": {
+      "add_effects": [
+        "mandala",
+        "colorShift"
+      ],
+      "palette_tint": "jungle",
+      "paranoia_boost": 1,
+      "intensity_mult": 1.2,
+      "lore": "Ritual drug archaeology, Pakal"
+    },
+    "greek": {
+      "add_effects": [
+        "mandala",
+        "rippleWaves"
+      ],
+      "palette_tint": "gold",
+      "paranoia_boost": 0,
+      "intensity_mult": 1.1,
+      "lore": "Eleusinian Mysteries, kykeon"
+    },
+    "haitian": {
+      "add_effects": [
+        "rippleWaves",
+        "shadowFigures"
+      ],
+      "palette_tint": "fire",
+      "paranoia_boost": 1,
+      "intensity_mult": 1.2,
+      "lore": "Vodou, revolution, ancestral trance"
+    },
+    "hindu": {
+      "add_effects": [
+        "mandala",
+        "auraBreathing"
+      ],
+      "palette_tint": "saffron",
+      "paranoia_boost": -1,
+      "intensity_mult": 1.1,
+      "lore": "Kali, Bhang, Ayurveda, kundalini"
+    },
+    "rastafarians": {
+      "add_effects": [
+        "chillFume",
+        "colorShift"
+      ],
+      "palette_tint": "green",
+      "paranoia_boost": -2,
+      "intensity_mult": 0.9,
+      "lore": "Lee Perry, reggae, ganja"
+    },
+    "gabon": {
+      "add_effects": [
+        "shadowFigures",
+        "breathingWarp"
+      ],
+      "palette_tint": "forest",
+      "paranoia_boost": 1,
+      "intensity_mult": 1.3,
+      "lore": "Bwiti iboga, deep visionary"
+    },
+    "cypherpunk": {
+      "add_effects": [
+        "glitchBars",
+        "chromaticAberration"
+      ],
+      "palette_tint": "digital",
+      "paranoia_boost": 2,
+      "intensity_mult": 1.1,
+      "lore": "Silk Road, crypto-anarchy, digital distortion"
+    },
+    "pythia": {
+      "add_effects": [
+        "tunnelVortex",
+        "auraBreathing"
+      ],
+      "palette_tint": "gold",
+      "paranoia_boost": 0,
+      "intensity_mult": 1.2,
+      "lore": "Oracle of Delphi, ethylene, vision tunnel"
+    },
+    "ethiopian": {
+      "add_effects": [
+        "colorShift",
+        "chillFume"
+      ],
+      "palette_tint": "amber",
+      "paranoia_boost": -1,
+      "intensity_mult": 1.0,
+      "lore": "Coffee ceremony, jazz, warm amber"
+    },
+    "sufis": {
+      "add_effects": [
+        "mandala",
+        "rippleWaves"
+      ],
+      "palette_tint": "white",
+      "paranoia_boost": -2,
+      "intensity_mult": 1.1,
+      "lore": "Whirling dervishes, Rumi, spiral rotation"
+    },
+    "stonewall": {
+      "add_effects": [
+        "colorShift",
+        "rippleWaves"
+      ],
+      "palette_tint": "rainbow",
+      "paranoia_boost": -2,
+      "intensity_mult": 1.0,
+      "lore": "Marsha P. Johnson, Pride, rainbow flash"
+    },
+    "japanese": {
+      "add_effects": [
+        "colorShift",
+        "auraBreathing"
+      ],
+      "palette_tint": "pink",
+      "paranoia_boost": 1,
+      "intensity_mult": 1.0,
+      "lore": "Methamphetamine wartime history, precision"
+    },
+    "chinese": {
+      "add_effects": [
+        "colorShift",
+        "mandala"
+      ],
+      "palette_tint": "red",
+      "paranoia_boost": 0,
+      "intensity_mult": 1.0,
+      "lore": "Tea culture, ancient pharmacy"
+    },
+    "buddhist": {
+      "add_effects": [
+        "mandala",
+        "auraBreathing",
+        "chillFume"
+      ],
+      "palette_tint": "gold",
+      "paranoia_boost": -2,
+      "intensity_mult": 0.9,
+      "lore": "Meditation, non-attachment, equanimity"
+    },
+    "irish druids": {
+      "add_effects": [
+        "breathingWarp",
+        "shadowFigures"
+      ],
+      "palette_tint": "forest",
+      "paranoia_boost": 1,
+      "intensity_mult": 1.1,
+      "lore": "Celtic shamanism, plant lore"
+    },
+    "mongolian": {
+      "add_effects": [
+        "auraBreathing",
+        "chillFume"
+      ],
+      "palette_tint": "earth",
+      "paranoia_boost": 0,
+      "intensity_mult": 1.0,
+      "lore": "Steppe shamanism, endurance"
+    },
+    "arabic": {
+      "add_effects": [
+        "colorShift",
+        "mandala"
+      ],
+      "palette_tint": "gold",
+      "paranoia_boost": 0,
+      "intensity_mult": 1.1,
+      "lore": "Coffeehouse culture, alchemy, Sufi tradition"
+    },
+    "ballroom": {
+      "add_effects": [
+        "colorShift",
+        "chromaticAberration",
+        "rippleWaves"
+      ],
+      "palette_tint": "rainbow",
+      "paranoia_boost": -1,
+      "intensity_mult": 1.1,
+      "lore": "NYC ballroom culture, vogue, queer performance"
+    },
+    "bong bear": {
+      "add_effects": [
+        "chillFume",
+        "breathingWarp"
+      ],
+      "palette_tint": "green",
+      "paranoia_boost": -1,
+      "intensity_mult": 0.9,
+      "lore": "Cannabis culture, chill vibes"
+    },
+    "nepali": {
+      "add_effects": [
+        "colorShift",
+        "breathingWarp"
+      ],
+      "palette_tint": "earth",
+      "paranoia_boost": 2,
+      "intensity_mult": 1.2,
+      "lore": "Mad honey, high altitude shamanism"
+    },
+    "aztec": {
+      "add_effects": [
+        "mandala",
+        "colorShift",
+        "thoughtBubbles"
+      ],
+      "palette_tint": "jungle",
+      "paranoia_boost": 1,
+      "intensity_mult": 1.3,
+      "lore": "Ololiuqui, mushroom ritual, solar calendar"
+    },
+    "viking": {
+      "add_effects": [
+        "auraBreathing",
+        "shadowFigures"
+      ],
+      "palette_tint": "cold",
+      "paranoia_boost": 1,
+      "intensity_mult": 1.1,
+      "lore": "Berserker mushroom lore, rune trance"
+    },
+    "roman": {
+      "add_effects": [
+        "colorShift",
+        "amberVignette"
+      ],
+      "palette_tint": "gold",
+      "paranoia_boost": 1,
+      "intensity_mult": 1.0,
+      "lore": "Imperial excess, Dionysian rites"
+    },
+    "persian": {
+      "add_effects": [
+        "colorShift",
+        "mandala"
+      ],
+      "palette_tint": "gold",
+      "paranoia_boost": 0,
+      "intensity_mult": 1.1,
+      "lore": "Syrian rue, ancient pharmacy, poetry"
+    },
+    "egyptian": {
+      "add_effects": [
+        "mandala",
+        "rippleWaves",
+        "auraBreathing"
+      ],
+      "palette_tint": "gold",
+      "paranoia_boost": -1,
+      "intensity_mult": 1.2,
+      "lore": "Blue lotus, sacred ceremony, afterlife rites"
+    },
+    "inuit": {
+      "add_effects": [
+        "shadowFigures",
+        "breathingWarp"
+      ],
+      "palette_tint": "cold",
+      "paranoia_boost": 1,
+      "intensity_mult": 1.1,
+      "lore": "Arctic shamanism, spirit world navigation"
+    },
+    "inca": {
+      "add_effects": [
+        "colorShift",
+        "auraBreathing"
+      ],
+      "palette_tint": "earth",
+      "paranoia_boost": 0,
+      "intensity_mult": 1.0,
+      "lore": "Coca leaf, coca ceremony, solar worship"
+    },
+    "celtic": {
+      "add_effects": [
+        "mandala",
+        "breathingWarp"
+      ],
+      "palette_tint": "forest",
+      "paranoia_boost": 0,
+      "intensity_mult": 1.1,
+      "lore": "Sacred groves, plant shamanism, Otherworld"
+    },
+    "african": {
+      "add_effects": [
+        "rippleWaves",
+        "auraBreathing"
+      ],
+      "palette_tint": "earth",
+      "paranoia_boost": -1,
+      "intensity_mult": 1.0,
+      "lore": "Pan-African ancestral music, rhythm as medicine"
+    },
+    "sumerian": {
+      "add_effects": [
+        "mandala",
+        "colorShift"
+      ],
+      "palette_tint": "gold",
+      "paranoia_boost": 0,
+      "intensity_mult": 1.2,
+      "lore": "Oldest written records, beer as sacred, proto-alchemy"
+    },
+    "polynesian": {
+      "add_effects": [
+        "rippleWaves",
+        "chillFume"
+      ],
+      "palette_tint": "ocean",
+      "paranoia_boost": -1,
+      "intensity_mult": 1.0,
+      "lore": "Kava ceremony, ocean navigation, star reading"
+    }
+  },
+  "archetypes": {
+    "freetekno": {
+      "add_effects": [
+        "chromaticAberration",
+        "colorShift"
+      ],
+      "paranoia_boost": 1,
+      "intensity_mult": 1.2,
+      "lore": "UK free party, techno, field raves, strobing raw energy"
+    },
+    "milady": {
+      "add_effects": [
+        "glitchBars"
+      ],
+      "paranoia_boost": 0,
+      "intensity_mult": 0.9,
+      "lore": "Current-era netizen, clearpill tension, refined glitch"
+    },
+    "chicago/detroit": {
+      "add_effects": [
+        "rippleWaves",
+        "auraBreathing"
+      ],
+      "paranoia_boost": -1,
+      "intensity_mult": 1.0,
+      "lore": "House music birth, Black queer history, bass pulse"
+    },
+    "acidhouse": {
+      "add_effects": [
+        "colorShift",
+        "mandala",
+        "chromaticAberration"
+      ],
+      "paranoia_boost": 2,
+      "intensity_mult": 1.3,
+      "lore": "Acid house revival, mushroom culture, maximum chromatic aberration"
+    }
+  },
+  "elements": {
+    "earth": {
+      "add_effects": [
+        "gravitySag"
+      ],
+      "palette_tint": "earth",
+      "paranoia_boost": -1,
+      "intensity_mult": 0.9,
+      "lore": "Grounding, body, stability, Pentacles"
+    },
+    "water": {
+      "add_effects": [
+        "rippleWaves"
+      ],
+      "palette_tint": "ocean",
+      "paranoia_boost": -1,
+      "intensity_mult": 1.0,
+      "lore": "Emotion, flow, Cups, relationships"
+    },
+    "air": {
+      "add_effects": [
+        "thoughtBubbles"
+      ],
+      "palette_tint": "cold",
+      "paranoia_boost": 1,
+      "intensity_mult": 1.1,
+      "lore": "Intellect, clarity, truth, Swords"
+    },
+    "fire": {
+      "add_effects": [
+        "colorShift",
+        "chromaticAberration"
+      ],
+      "palette_tint": "fire",
+      "paranoia_boost": 1,
+      "intensity_mult": 1.2,
+      "lore": "Energy, willpower, creativity, Wands"
+    }
+  },
+  "tarot_suits": {
+    "Major Arcana": {
+      "add_effects": [
+        "mandala"
+      ],
+      "paranoia_boost": 1,
+      "intensity_mult": 1.2
+    },
+    "Wands": {
+      "add_effects": [
+        "colorShift"
+      ],
+      "paranoia_boost": 0,
+      "intensity_mult": 1.1
+    },
+    "Cups": {
+      "add_effects": [
+        "rippleWaves"
+      ],
+      "paranoia_boost": -1,
+      "intensity_mult": 1.0
+    },
+    "Swords": {
+      "add_effects": [
+        "thoughtBubbles"
+      ],
+      "paranoia_boost": 1,
+      "intensity_mult": 0.9
+    },
+    "Pentacles": {
+      "add_effects": [
+        "gravitySag"
+      ],
+      "paranoia_boost": -1,
+      "intensity_mult": 0.8
+    }
+  },
+  "palette_tints": {
+    "earth": {
+      "css": "sepia(0.3) hue-rotate(20deg)",
+      "hex": "#8B6914"
+    },
+    "jungle": {
+      "css": "hue-rotate(90deg) saturate(1.4)",
+      "hex": "#228B22"
+    },
+    "gold": {
+      "css": "sepia(0.5) brightness(1.1)",
+      "hex": "#FFD700"
+    },
+    "fire": {
+      "css": "hue-rotate(-30deg) saturate(1.6)",
+      "hex": "#FF4500"
+    },
+    "saffron": {
+      "css": "sepia(0.4) hue-rotate(10deg) brightness(1.1)",
+      "hex": "#FF6B00"
+    },
+    "green": {
+      "css": "hue-rotate(100deg) saturate(1.3)",
+      "hex": "#228B22"
+    },
+    "forest": {
+      "css": "hue-rotate(100deg) saturate(1.2) brightness(0.8)",
+      "hex": "#355E3B"
+    },
+    "digital": {
+      "css": "hue-rotate(120deg) saturate(2.0) contrast(1.2)",
+      "hex": "#00FF41"
+    },
+    "amber": {
+      "css": "sepia(0.4) brightness(1.05)",
+      "hex": "#FFBF00"
+    },
+    "white": {
+      "css": "saturate(0.3) brightness(1.2)",
+      "hex": "#F8F8FF"
+    },
+    "rainbow": {
+      "css": "hue-rotate(var(--rainbow-deg, 0deg)) saturate(1.5)",
+      "hex": "#FF0000"
+    },
+    "cold": {
+      "css": "hue-rotate(200deg) saturate(1.2)",
+      "hex": "#4169E1"
+    },
+    "ocean": {
+      "css": "hue-rotate(180deg) saturate(1.3)",
+      "hex": "#006994"
+    },
+    "red": {
+      "css": "hue-rotate(-20deg) saturate(1.5)",
+      "hex": "#CC0000"
+    },
+    "pink": {
+      "css": "hue-rotate(300deg) saturate(1.2)",
+      "hex": "#FF69B4"
+    }
+  },
+  "dose_modifiers": {
+    "first_time": {
+      "intensity_mult": 0.6,
+      "max_effects": 3,
+      "paranoia_boost": -1,
+      "narrative_prefix": "Gently..."
+    },
+    "experienced": {
+      "intensity_mult": 1.0,
+      "max_effects": 5,
+      "paranoia_boost": 0,
+      "narrative_prefix": ""
+    },
+    "fuck_me_up": {
+      "intensity_mult": 1.5,
+      "max_effects": 6,
+      "paranoia_boost": 2,
+      "narrative_prefix": "HARD. No mercy \u2014",
+      "extra_effects": [
+        "chromaticAberration",
+        "thoughtBubbles",
+        "glitchBars",
+        "tunnelVortex",
+        "pixelWarp"
+      ]
+    }
+  },
+  "thought_bubble_pool": [
+    "did i take too much",
+    "everyone can tell",
+    "am i the teddy bear",
+    "what time is it actually",
+    "i should drink some water",
+    "the music is doing something to me specifically",
+    "i need to sit down",
+    "is that person looking at me",
+    "i am the main character of this night",
+    "i should have eaten first",
+    "this is fine this is completely fine",
+    "what was i saying",
+    "the bass is inside me",
+    "i am vibrating at the correct frequency",
+    "i should text someone",
+    "do not text anyone",
+    "how long have i been standing here",
+    "the ceiling is moving",
+    "i love everyone here",
+    "i need to go outside",
+    "the shadows are doing something",
+    "i am fine i am fine i am fine"
+  ]
+}

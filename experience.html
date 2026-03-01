@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mibera Experience — Enter the Trip</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="experience.css">
+</head>
+<body>
+  <!-- Atmospheric background layers -->
+  <canvas id="bg-canvas" aria-hidden="true"></canvas>
+  <div class="noise-overlay" aria-hidden="true"></div>
+  <div class="vignette" aria-hidden="true"></div>
+
+  <!-- ====================== HEADER ====================== -->
+  <header class="site-header">
+    <p class="site-super">Mibera Maker</p>
+    <h1 class="site-title">The Experience</h1>
+    <p class="site-sub">Enter the trip. Let the substance speak.</p>
+  </header>
+
+  <!-- ====================== STEP 1: TOKEN LOOKUP ====================== -->
+  <section id="step-lookup" class="step" aria-label="Find your Mibera">
+    <div class="step-inner">
+      <h2 class="step-heading">
+        <span class="step-number">I</span>
+        Summon Your Mibera
+      </h2>
+      <p class="step-desc">Enter a token number (1–10,000) to begin.</p>
+
+      <form id="lookup-form" autocomplete="off" novalidate>
+        <div class="token-input-row">
+          <label for="token-input" class="sr-only">Mibera token number</label>
+          <input
+            type="number"
+            id="token-input"
+            min="1"
+            max="10000"
+            placeholder="Enter Mibera # (1–10,000)"
+            inputmode="numeric"
+            required
+          >
+          <button type="submit" id="lookup-btn" class="btn-primary">Summon</button>
+        </div>
+      </form>
+
+      <div id="lookup-loading" class="loading-state" hidden>
+        <div class="loader" role="status" aria-label="Loading Mibera data"></div>
+        <p>Channeling the codex…</p>
+      </div>
+
+      <div id="lookup-error" class="error-state" hidden role="alert">
+        <p id="lookup-error-msg"></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====================== STEP 2: MIBERA TRAITS ====================== -->
+  <section id="step-traits" class="step" hidden aria-label="Your Mibera">
+    <div class="step-inner">
+      <h2 class="step-heading">
+        <span class="step-number">II</span>
+        Your Mibera
+      </h2>
+
+      <div class="mibera-card">
+        <div class="mibera-portrait-wrap">
+          <img
+            id="mibera-img"
+            alt=""
+            crossorigin="anonymous"
+            class="mibera-portrait"
+            loading="eager"
+          >
+          <div id="mibera-img-fallback" class="portrait-fallback" hidden aria-hidden="true">
+            <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <circle cx="50" cy="35" r="20" fill="#2a1a2a"/>
+              <rect x="25" y="60" width="50" height="35" rx="8" fill="#2a1a2a"/>
+            </svg>
+          </div>
+        </div>
+
+        <div class="mibera-info">
+          <h3 id="mibera-name" class="mibera-name"></h3>
+          <p id="mibera-number" class="mibera-number"></p>
+
+          <div class="trait-grid" id="mibera-traits">
+            <!-- Populated by JS -->
+          </div>
+
+          <div class="lore-drug-card" id="lore-drug-card" hidden>
+            <p class="lore-drug-label">Lore Substance</p>
+            <p class="lore-drug-name" id="lore-drug-name"></p>
+            <p class="lore-drug-tarot" id="lore-drug-tarot"></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="step-continue">
+        <button id="continue-to-drug" class="btn-secondary">Choose a Substance ↓</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====================== STEP 3: DRUG PICKER ====================== -->
+  <section id="step-drug" class="step" hidden aria-label="Choose your substance">
+    <div class="step-inner">
+      <h2 class="step-heading">
+        <span class="step-number">III</span>
+        Choose Your Substance
+      </h2>
+      <p class="step-desc">
+        79 substances from the Mibera Codex.
+        Your lore substance is marked <span class="lore-badge-inline">✦ LORE</span>.
+      </p>
+
+      <div class="drug-search-wrap">
+        <label for="drug-search" class="sr-only">Search substances</label>
+        <input
+          type="search"
+          id="drug-search"
+          placeholder="Search substances…"
+          autocomplete="off"
+          class="drug-search-input"
+        >
+      </div>
+
+      <div class="drug-categories" id="drug-category-filters" role="group" aria-label="Filter by category">
+        <button class="cat-filter active" data-cat="all">All</button>
+        <button class="cat-filter" data-cat="psychedelic">Psychedelic</button>
+        <button class="cat-filter" data-cat="empathogen">Empathogen</button>
+        <button class="cat-filter" data-cat="stimulant">Stimulant</button>
+        <button class="cat-filter" data-cat="dissociative">Dissociative</button>
+        <button class="cat-filter" data-cat="depressant">Depressant</button>
+        <button class="cat-filter" data-cat="cannabinoid">Cannabinoid</button>
+        <button class="cat-filter" data-cat="entheogen">Entheogen</button>
+        <button class="cat-filter" data-cat="adaptogen">Adaptogen</button>
+        <button class="cat-filter" data-cat="deliriant">Deliriant</button>
+        <button class="cat-filter" data-cat="other">Other</button>
+      </div>
+
+      <div
+        id="drug-list"
+        class="drug-list"
+        role="listbox"
+        aria-label="Substance list"
+        aria-required="true"
+      >
+        <!-- Populated by JS -->
+      </div>
+
+      <div id="drug-detail" class="drug-detail" hidden aria-live="polite">
+        <h4 class="drug-detail-name" id="drug-detail-name"></h4>
+        <p class="drug-detail-cat" id="drug-detail-cat"></p>
+        <p class="drug-detail-summary" id="drug-detail-summary"></p>
+        <div class="drug-detail-intensity">
+          <span class="intensity-label">Intensity</span>
+          <div class="intensity-bar" id="drug-detail-intensity-bar">
+            <div class="intensity-fill" id="drug-detail-intensity-fill"></div>
+          </div>
+          <span class="intensity-num" id="drug-detail-intensity-num"></span>
+        </div>
+        <p class="drug-detail-tarot" id="drug-detail-tarot"></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====================== STEP 4: DOSE SELECTOR ====================== -->
+  <section id="step-dose" class="step" hidden aria-label="Choose your dose">
+    <div class="step-inner">
+      <h2 class="step-heading">
+        <span class="step-number">IV</span>
+        Choose Your Dose
+      </h2>
+
+      <div class="dose-buttons" role="group" aria-label="Dose level">
+        <button class="dose-btn" data-dose="first_time" aria-pressed="false">
+          <span class="dose-title">First Time</span>
+          <span class="dose-desc">Gentle introduction. The substance reaches out slowly.</span>
+        </button>
+        <button class="dose-btn" data-dose="experienced" aria-pressed="false">
+          <span class="dose-title">Experienced</span>
+          <span class="dose-desc">Standard journey. You know where you're going.</span>
+        </button>
+        <button class="dose-btn" data-dose="fuck_me_up" aria-pressed="false">
+          <span class="dose-title">Fuck Me Up</span>
+          <span class="dose-desc">Maximum intensity. No mercy. You were warned.</span>
+        </button>
+      </div>
+
+      <div class="begin-wrap">
+        <button id="begin-btn" class="btn-begin" disabled>
+          Begin the Trip
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====================== STEP 5: EXPERIENCE (Sprint 2) ====================== -->
+  <section id="step-experience" class="step" hidden aria-label="The trip">
+    <div class="step-inner step-inner--full">
+      <div class="experience-canvas-wrap">
+        <canvas id="trip-canvas" aria-label="Psychedelic visual experience"></canvas>
+        <div id="trip-overlay" class="trip-overlay"></div>
+      </div>
+
+      <div id="trip-narrative" class="trip-narrative" aria-live="polite">
+        <div class="narrative-section" id="narrative-general">
+          <h4 class="narrative-label">General Effects</h4>
+          <p class="narrative-text" id="narrative-general-text"></p>
+        </div>
+        <div class="narrative-section" id="narrative-personal">
+          <h4 class="narrative-label">Your Mibera's Trip</h4>
+          <p class="narrative-text" id="narrative-personal-text"></p>
+        </div>
+      </div>
+
+      <div class="experience-controls">
+        <button id="copy-link-btn" class="btn-secondary" aria-label="Copy shareable link">Copy Link</button>
+        <button id="restart-btn" class="btn-secondary">Start Over</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====================== FOOTER ====================== -->
+  <footer class="site-footer">
+    <p>
+      Mibera Maker — 10,000 generative dNFTs —
+      <a href="index.html" class="footer-link">Valentine Match</a>
+    </p>
+  </footer>
+
+  <script src="experience.js"></script>
+</body>
+</html>

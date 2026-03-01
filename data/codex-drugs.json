@@ -1,0 +1,1627 @@
+{
+  "_meta": {
+    "version": "1.0.0",
+    "source": "Mibera Codex + mibera_all_traits.csv",
+    "drug_count": 77,
+    "note": "Tarot derived from drug field — there is no separate tarot column in the CSV"
+  },
+  "drugs": {
+    "2c-b": {
+      "slug": "2c-b",
+      "name": "2C-B",
+      "category": "psychedelic",
+      "intensity": 8,
+      "effects_summary": "Phenethylamine psychedelic producing vivid visual fractals and heightened sensory clarity. Emotionally lucid with a strong body feeling.",
+      "visual_profile": {
+        "base_effects": ["colorShift", "breathingWarp", "chromaticAberration", "rippleWaves"],
+        "palette": ["#ff33cc", "#cc00ff", "#ff6699"],
+        "paranoia_level": 2,
+        "thought_bubbles": false,
+        "sacred_geometry": true
+      },
+      "narrative_template": {
+        "general": "Colour becomes music. Every surface shimmers with mathematical precision. You are inside the equation."
+      },
+      "connections": {
+        "tarot": "Two of Cups",
+        "suit": "Cups"
+      }
+    },
+    "acacia": {
+      "slug": "acacia",
+      "name": "Acacia",
+      "category": "entheogen",
+      "intensity": 9,
+      "effects_summary": "DMT-containing sacred tree used in Aboriginal shamanism. Produces intense visionary states and encounters with the ineffable.",
+      "visual_profile": {
+        "base_effects": ["colorShift", "breathingWarp", "mandala", "thoughtBubbles"],
+        "palette": ["#cc9900", "#ff6600", "#339966"],
+        "paranoia_level": 2,
+        "thought_bubbles": true,
+        "sacred_geometry": true
+      },
+      "narrative_template": {
+        "general": "The tree speaks. Its roots reach through sixty thousand years of memory. You are held in the Dreamtime."
+      },
+      "connections": {
+        "tarot": "Ace of Cups",
+        "suit": "Cups"
+      }
+    },
+    "alcohol": {
+      "slug": "alcohol",
+      "name": "Alcohol",
+      "category": "depressant",
+      "intensity": 4,
+      "effects_summary": "Fermented ethanol producing warmth, social ease, and progressive sedation. Gravity increases. Edges soften.",
+      "visual_profile": {
+        "base_effects": ["gravitySag", "amberVignette", "colorShift"],
+        "palette": ["#cc8800", "#994400", "#ffcc66"],
+        "paranoia_level": 1,
+        "thought_bubbles": false,
+        "sacred_geometry": false
+      },
+      "narrative_template": {
+        "general": "The room tilts gently. Time slows to amber. You are warm and slightly imprecise, like a beloved photograph."
+      },
+      "connections": {
+        "tarot": "Ace of Pentacles",
+        "suit": "Pentacles"
+      }
+    },
+    "ancestral trance": {
+      "slug": "ancestral trance",
+      "name": "Ancestral Trance",
+      "category": "entheogen",
+      "intensity": 8,
+      "effects_summary": "Rhythm-induced altered state. No chemical vector — pure percussive resonance opens the veil. Used across Haitian Vodou and Aboriginal ceremony.",
+      "visual_profile": {
+        "base_effects": ["breathingWarp", "rippleWaves", "auraBreathing", "mandala"],
+        "palette": ["#cc3300", "#ff6600", "#ffffff"],
+        "paranoia_level": 1,
+        "thought_bubbles": false,
+        "sacred_geometry": true
+      },
+      "narrative_template": {
+        "general": "The drum is a door. Your ancestors step through it. You have been here before — before language, before memory."
+      },
+      "connections": {
+        "tarot": "Eight of Cups",
+        "suit": "Cups"
+      }
+    },
+    "arundo donax": {
+      "slug": "arundo donax",
+      "name": "Arundo Donax",
+      "category": "other",
+      "intensity": 3,
+      "effects_summary": "Giant reed plant with possible psychoactive alkaloids. Mild, ambiguous effects. Sacred to some indigenous traditions.",
+      "visual_profile": {
+        "base_effects": ["chillFume", "colorShift"],
+        "palette": ["#669900", "#99cc33", "#ccff66"],
+        "paranoia_level": 1,
+        "thought_bubbles": false,
+        "sacred_geometry": false
+      },
+      "narrative_template": {
+        "general": "A soft green haze. The wind through reeds. Something is almost there, just beyond the peripheral."
+      },
+      "connections": {
+        "tarot": "Ten of Swords",
+        "suit": "Swords"
+      }
+    },
+    "ashwagandha": {
+      "slug": "ashwagandha",
+      "name": "Ashwagandha",
+      "category": "adaptogen",
+      "intensity": 2,
+      "effects_summary": "Ancient Ayurvedic root that reduces cortisol and promotes calm sustained energy. The absence of noise is itself profound.",
+      "visual_profile": {
+        "base_effects": ["chillFume", "auraBreathing"],
+        "palette": ["#cc9966", "#ffcc99", "#996633"],
+        "paranoia_level": 1,
+        "thought_bubbles": false,
+        "sacred_geometry": false
+      },
+      "narrative_template": {
+        "general": "The noise in your body recedes. You become the stillness beneath the music. The Hermit has found his cave."
+      },
+      "connections": {
+        "tarot": "The Hermit",
+        "suit": "Major Arcana"
+      }
+    },
+    "ayahuasca": {
+      "slug": "ayahuasca",
+      "name": "Ayahuasca",
+      "category": "entheogen",
+      "intensity": 10,
+      "effects_summary": "Sacred Amazonian DMT brew. Produces full-reality dissolution, encounters with entities, and confrontation with the deepest self. Not recreational. Transformative.",
+      "visual_profile": {
+        "base_effects": ["colorShift", "breathingWarp", "mandala", "thoughtBubbles", "chromaticAberration", "rippleWaves"],
+        "palette": ["#9900cc", "#ff0066", "#00ff99", "#ffcc00"],
+        "paranoia_level": 4,
+        "thought_bubbles": true,
+        "sacred_geometry": true
+      },
+      "narrative_template": {
+        "general": "The vine drinks you. You are unspooled across ten thousand years. The serpent was always your spine."
+      },
+      "connections": {
+        "tarot": "The Fool",
+        "suit": "Major Arcana"
+      }
+    },
+    "benadryl": {
+      "slug": "benadryl",
+      "name": "Benadryl",
+      "category": "deliriant",
+      "intensity": 5,
+      "effects_summary": "Anticholinergic antihistamine producing dry delirium, shadow figures, and impossible conversations with people who are not there.",
+      "visual_profile": {
+        "base_effects": ["thoughtBubbles", "shadowFigures", "eyeDilation"],
+        "palette": ["#330066", "#660033", "#1a1a2e"],
+        "paranoia_level": 4,
+        "thought_bubbles": true,
+        "sacred_geometry": false
+      },
+      "narrative_template": {
+        "general": "Someone just said your name. You look. Nobody is there. The phone is ringing but it isn't. Your mouth is chalk."
+      },
+      "connections": {
+        "tarot": "Two of Swords",
+        "suit": "Swords"
+      }
+    },
+    "bhang": {
+      "slug": "bhang",
+      "name": "Bhang",
+      "category": "cannabinoid",
+      "intensity": 5,
+      "effects_summary": "Sacred cannabis preparation consumed in Hindu ceremony. Milk-dissolved hashish producing dreamy devotional states and dissolving ordinary care.",
+      "visual_profile": {
+        "base_effects": ["breathingWarp", "colorShift", "chillFume"],
+        "palette": ["#336600", "#99cc00", "#669900"],
+        "paranoia_level": 2,
+        "thought_bubbles": false,
+        "sacred_geometry": true
+      },
+      "narrative_template": {
+        "general": "Shiva's gift. The mind becomes river — always moving, never troubled. The dancefloor is a temple tonight."
+      },
+      "connections": {
+        "tarot": "Seven of Cups",
+        "suit": "Cups"
+      }
+    },
+    "brahmi": {
+      "slug": "brahmi",
+      "name": "Brahmi",
+      "category": "adaptogen",
+      "intensity": 2,
+      "effects_summary": "Ayurvedic cognitive herb (Bacopa monnieri) enhancing memory and reducing anxiety over time. Gentle, cumulative, intelligent.",
+      "visual_profile": {
+        "base_effects": ["chillFume", "auraBreathing"],
+        "palette": ["#006699", "#3399cc", "#99ccff"],
+        "paranoia_level": 1,
+        "thought_bubbles": false,
+        "sacred_geometry": false
+      },
+      "narrative_template": {
+        "general": "Your thoughts arrive with unusual clarity. Memory opens like a drawer you forgot you had."
+      },
+      "connections": {
+        "tarot": "Page of Swords",
+        "suit": "Swords"
+      }
+    },
+    "bufotenin": {
+      "slug": "bufotenin",
+      "name": "Bufotenin",
+      "category": "psychedelic",
+      "intensity": 9,
+      "effects_summary": "Toad-secreted tryptamine producing sudden, overwhelming psychedelia. No preparation can ready you. The Tower strikes without warning.",
+      "visual_profile": {
+        "base_effects": ["colorShift", "chromaticAberration", "breathingWarp", "thoughtBubbles"],
+        "palette": ["#ff3300", "#cc0000", "#ff9900"],
+        "paranoia_level": 5,
+        "thought_bubbles": true,
+        "sacred_geometry": false
+      },
+      "narrative_template": {
+        "general": "Lightning through your spine. Reality cracks open. You are being rebuilt from incorrect materials. Hold on."
+      },
+      "connections": {
+        "tarot": "The Tower",
+        "suit": "Major Arcana"
+      }
+    },
+    "caffeine": {
+      "slug": "caffeine",
+      "name": "Caffeine",
+      "category": "stimulant",
+      "intensity": 3,
+      "effects_summary": "Global morning ritual. Adenosine blocker producing focused alertness, warmth, and the illusion that today will be different.",
+      "visual_profile": {
+        "base_effects": ["colorShift", "auraBreathing"],
+        "palette": ["#ffcc00", "#ff9900", "#ffee99"],
+        "paranoia_level": 1,
+        "thought_bubbles": false,
+        "sacred_geometry": false
+      },
+      "narrative_template": {
+        "general": "The sun rises inside you. Sharp edges, warm light. The world makes sense again, at least until it doesn't."
+      },
+      "connections": {
+        "tarot": "The Sun",
+        "suit": "Major Arcana"
+      }
+    },
+    "cbd": {
+      "slug": "cbd",
+      "name": "CBD",
+      "category": "adaptogen",
+      "intensity": 2,
+      "effects_summary": "Non-psychoactive cannabinoid modulating anxiety and inflammation. The calm without the trip. Grounded, terrestrial.",
+      "visual_profile": {
+        "base_effects": ["chillFume", "amberVignette"],
+        "palette": ["#339966", "#66cc99", "#99ffcc"],
+        "paranoia_level": 1,
+        "thought_bubbles": false,
+        "sacred_geometry": false
+      },
+      "narrative_template": {
+        "general": "The edge of the knife is still. You breathe without the catch in your chest. This is what normal feels like."
+      },
+      "connections": {
+        "tarot": "Eight of Pentacles",
+        "suit": "Pentacles"
+      }
+    },
+    "chewing tobacco": {
+      "slug": "chewing tobacco",
+      "name": "Chewing Tobacco",
+      "category": "stimulant",
+      "intensity": 3,
+      "effects_summary": "Oral tobacco producing sustained nicotine absorption and mild stimulation. Slower, earthier, more ancient than a cigarette.",
+      "visual_profile": {
+        "base_effects": ["colorShift", "chillFume"],
+        "palette": ["#996633", "#cc9966", "#663300"],
+        "paranoia_level": 1,
+        "thought_bubbles": false,
+        "sacred_geometry": false
+      },
+      "narrative_template": {
+        "general": "The nicotine pools slow. Time lengthens. You are patient now, the way the earth is patient."
+      },
+      "connections": {
+        "tarot": "Six of Wands",
+        "suit": "Wands"
+      }
+    },
+    "clear pill": {
+      "slug": "clear pill",
+      "name": "Clear Pill",
+      "category": "adaptogen",
+      "intensity": 1,
+      "effects_summary": "The Milady substance — clarity, sobriety-adjacent, hyper-cognitive mode with no psychedelic distortion. Seeing through the veil without dissolving into it.",
+      "visual_profile": {
+        "base_effects": ["auraBreathing", "colorShift"],
+        "palette": ["#ffffff", "#e0e0ff", "#c0c0ff"],
+        "paranoia_level": 1,
+        "thought_bubbles": false,
+        "sacred_geometry": false
+      },
+      "narrative_template": {
+        "general": "Everything is exactly what it is. No colour shift. No warp. Just the present moment, stripped to its architecture."
+      },
+      "connections": {
+        "tarot": "Eight of Swords",
+        "suit": "Swords"
+      }
+    },
+    "coca": {
+      "slug": "coca",
+      "name": "Coca",
+      "category": "stimulant",
+      "intensity": 5,
+      "effects_summary": "Sacred Andean leaf chewed for millennia. Sustained mild stimulation, altitude adjustment, and ceremonial connection to the land.",
+      "visual_profile": {
+        "base_effects": ["colorShift", "auraBreathing", "chromaticAberration"],
+        "palette": ["#669900", "#336600", "#99cc00"],
+        "paranoia_level": 1,
+        "thought_bubbles": false,
+        "sacred_geometry": false
+      },
+      "narrative_template": {
+        "general": "The green leaf is ancient medicine. You feel the mountain's heartbeat. Slow energy rises like altitude itself."
+      },
+      "connections": {
+        "tarot": "Ace of Wands",
+        "suit": "Wands"
+      }
+    },
+    "cocaine": {
+      "slug": "cocaine",
+      "name": "Cocaine",
+      "category": "stimulant",
+      "intensity": 8,
+      "effects_summary": "Refined coca alkaloid producing explosive euphoria, grandiosity, and acute cardiovascular stimulation. The Emperor believes he has arrived.",
+      "visual_profile": {
+        "base_effects": ["colorShift", "chromaticAberration", "auraBreathing"],
+        "palette": ["#ffffff", "#ccccff", "#9999cc"],
+        "paranoia_level": 3,
+        "thought_bubbles": true,
+        "sacred_geometry": false
+      },
+      "narrative_template": {
+        "general": "You are the most interesting person in every room. The music was written specifically for you. This feeling is permanent."
+      },
+      "connections": {
+        "tarot": "The Emperor",
+        "suit": "Major Arcana"
+      }
+    },
+    "coffee": {
+      "slug": "coffee",
+      "name": "Coffee",
+      "category": "stimulant",
+      "intensity": 3,
+      "effects_summary": "The drink that created modernity. Sufi monasteries, coffeehouses, revolutions. Warm alertness and the comfort of ritual.",
+      "visual_profile": {
+        "base_effects": ["colorShift", "chillFume"],
+        "palette": ["#663300", "#996633", "#cc9966"],
+        "paranoia_level": 1,
+        "thought_bubbles": false,
+        "sacred_geometry": false
+      },
+      "narrative_template": {
+        "general": "Warm amber rises. Thought arrives in clean lines. The coffehouse has always been where revolution was planned."
+      },
+      "connections": {
+        "tarot": "Two of Wands",
+        "suit": "Wands"
+      }
+    },
+    "datura": {
+      "slug": "datura",
+      "name": "Datura",
+      "category": "deliriant",
+      "intensity": 8,
+      "effects_summary": "Tropane alkaloid nightshade. The most dangerous plant on this list. Produces full delirium, impossible conversations, and complete amnesia. Not a party drug.",
+      "visual_profile": {
+        "base_effects": ["thoughtBubbles", "shadowFigures", "eyeDilation", "colorShift"],
+        "palette": ["#ffffff", "#330033", "#660000"],
+        "paranoia_level": 5,
+        "thought_bubbles": true,
+        "sacred_geometry": false
+      },
+      "narrative_template": {
+        "general": "You cannot tell what is real. People you love are standing in the room but their faces are wrong. Your hands will not obey you."
+      },
+      "connections": {
+        "tarot": "The Hanged Man",
+        "suit": "Major Arcana"
+      }
+    },
+    "dextroamphetamine": {
+      "slug": "dextroamphetamine",
+      "name": "Dextroamphetamine",
+      "category": "stimulant",
+      "intensity": 7,
+      "effects_summary": "Refined amphetamine salt producing intense focused drive and euphoric productivity. The Chariot does not slow down.",
+      "visual_profile": {
+        "base_effects": ["colorShift", "chromaticAberration", "auraBreathing"],
+        "palette": ["#ff6600", "#ff9900", "#ffcc00"],
+        "paranoia_level": 3,
+        "thought_bubbles": true,
+        "sacred_geometry": false
+      },
+      "narrative_template": {
+        "general": "Thought accelerates beyond speech. You have seventeen plans. The first three are already complete. This is sustainable."
+      },
+      "connections": {
+        "tarot": "The Chariot",
+        "suit": "Major Arcana"
+      }
+    },
+    "dmt": {
+      "slug": "dmt",
+      "name": "DMT",
+      "category": "psychedelic",
+      "intensity": 10,
+      "effects_summary": "Dimethyltryptamine. The breakthrough molecule. 15 minutes of impossible geometry and encounters with entities beyond language. You asked for this.",
+      "visual_profile": {
+        "base_effects": ["colorShift", "mandala", "breathingWarp", "chromaticAberration", "rippleWaves"],
+        "palette": ["#ff00ff", "#00ffff", "#ffff00", "#ff0099"],
+        "paranoia_level": 3,
+        "thought_bubbles": false,
+        "sacred_geometry": true
+      },
+      "narrative_template": {
+        "general": "You are somewhere else. It is not somewhere else — it was always here. The geometric beings regard you with patient familiarity."
+      },
+      "connections": {
+        "tarot": "The Magician",
+        "suit": "Major Arcana"
+      }
+    },
+    "ephedra": {
+      "slug": "ephedra",
+      "name": "Ephedra",
+      "category": "stimulant",
+      "intensity": 4,
+      "effects_summary": "Ancient alkaloid-rich plant, the ancestor of amphetamines. Sustained clean energy with slight cardiovascular elevation.",
+      "visual_profile": {
+        "base_effects": ["colorShift", "auraBreathing"],
+        "palette": ["#99cc00", "#669900", "#ccff33"],
+        "paranoia_level": 2,
+        "thought_bubbles": false,
+        "sacred_geometry": false
+      },
+      "narrative_template": {
+        "general": "Clean electricity through tired muscles. The plant has been here since before history. So has this feeling."
+      },
+      "connections": {
+        "tarot": "Nine of Wands",
+        "suit": "Wands"
+      }
+    },
+    "estrogen": {
+      "slug": "estrogen",
+      "name": "Estrogen",
+      "category": "other",
+      "intensity": 3,
+      "effects_summary": "Feminizing hormone shifting perception, affect, and embodiment over time. Slow alchemical transformation from within.",
+      "visual_profile": {
+        "base_effects": ["colorShift", "rippleWaves", "chillFume"],
+        "palette": ["#ff99cc", "#ffccee", "#cc66aa"],
+        "paranoia_level": 1,
+        "thought_bubbles": false,
+        "sacred_geometry": false
+      },
+      "narrative_template": {
+        "general": "The body renegotiates its terms. Colour shifts slowly toward something more true. You are becoming."
+      },
+      "connections": {
+        "tarot": "Ten of Cups",
+        "suit": "Cups"
+      }
+    },
+    "ethanol": {
+      "slug": "ethanol",
+      "name": "Ethanol",
+      "category": "depressant",
+      "intensity": 4,
+      "effects_summary": "Pure alcohol — same spirit, different name. The molecule that built civilisations and destroyed them. It does not lie about what it is.",
+      "visual_profile": {
+        "base_effects": ["gravitySag", "amberVignette"],
+        "palette": ["#cc9900", "#996600", "#ffcc66"],
+        "paranoia_level": 1,
+        "thought_bubbles": false,
+        "sacred_geometry": false
+      },
+      "narrative_template": {
+        "general": "The edges of the night curve gently inward. You are loose in your skin. Something important has been set down."
+      },
+      "connections": {
+        "tarot": "Two of Pentacles",
+        "suit": "Pentacles"
+      }
+    },
+    "ethylene": {
+      "slug": "ethylene",
+      "name": "Ethylene",
+      "category": "other",
+      "intensity": 5,
+      "effects_summary": "Sweet-smelling gas used in ancient Delphi. The Oracle of the Pythia breathed it from rock fissures and delivered prophecy. You are not the Pythia. Maybe.",
+      "visual_profile": {
+        "base_effects": ["breathingWarp", "colorShift", "auraBreathing"],
+        "palette": ["#ffee99", "#ccaa00", "#ffdd66"],
+        "paranoia_level": 2,
+        "thought_bubbles": false,
+        "sacred_geometry": false
+      },
+      "narrative_template": {
+        "general": "The vapour rises from the fissure. You speak without choosing your words. What comes out may be true."
+      },
+      "connections": {
+        "tarot": "Knight of Swords",
+        "suit": "Swords"
+      }
+    },
+    "euphoria": {
+      "slug": "euphoria",
+      "name": "Euphoria",
+      "category": "other",
+      "intensity": 8,
+      "effects_summary": "The state itself as substance. When the music, the crowd, the night, and whatever you took converge into a singular moment of rightness.",
+      "visual_profile": {
+        "base_effects": ["colorShift", "rippleWaves", "auraBreathing", "chromaticAberration"],
+        "palette": ["#ffff00", "#ff9900", "#ff3399"],
+        "paranoia_level": 1,
+        "thought_bubbles": false,
+        "sacred_geometry": false
+      },
+      "narrative_template": {
+        "general": "This is it. This is the moment you were in the entire time. You have arrived at the centre of the night."
+      },
+      "connections": {
+        "tarot": "Judgement",
+        "suit": "Major Arcana"
+      }
+    },
+    "grayanotoxin": {
+      "slug": "grayanotoxin",
+      "name": "Grayanotoxin",
+      "category": "other",
+      "intensity": 6,
+      "effects_summary": "Mad honey toxin from rhododendron nectar. Tingling numbness, cardiac arrhythmia, altered consciousness. Ancient poison used for warfare and ritual.",
+      "visual_profile": {
+        "base_effects": ["gravitySag", "thoughtBubbles", "eyeDilation"],
+        "palette": ["#ffdd00", "#cc8800", "#ff6600"],
+        "paranoia_level": 4,
+        "thought_bubbles": true,
+        "sacred_geometry": false
+      },
+      "narrative_template": {
+        "general": "Sweetness conceals poison. Your heart skips an unknown number of beats. The honey was a mistake and you knew it."
+      },
+      "connections": {
+        "tarot": "Wheel of Fortune",
+        "suit": "Major Arcana"
+      }
+    },
+    "henbane": {
+      "slug": "henbane",
+      "name": "Henbane",
+      "category": "deliriant",
+      "intensity": 7,
+      "effects_summary": "Ancient anticholinergic used by witches and oracles. Induces trance, hallucination of flight, and encounters with the dead.",
+      "visual_profile": {
+        "base_effects": ["thoughtBubbles", "shadowFigures", "breathingWarp", "eyeDilation"],
+        "palette": ["#660066", "#330033", "#aa44aa"],
+        "paranoia_level": 4,
+        "thought_bubbles": true,
+        "sacred_geometry": false
+      },
+      "narrative_template": {
+        "general": "The dead are nearby. You can almost hear what they are saying. The smoke is yellow and you should not breathe it but you already have."
+      },
+      "connections": {
+        "tarot": "Queen of Swords",
+        "suit": "Swords"
+      }
+    },
+    "iboga": {
+      "slug": "iboga",
+      "name": "Iboga",
+      "category": "entheogen",
+      "intensity": 9,
+      "effects_summary": "Bwiti initiatory plant from Gabon. 36-hour ceremony that is also a death and also a birth. Your ancestors will have opinions.",
+      "visual_profile": {
+        "base_effects": ["breathingWarp", "mandala", "shadowFigures", "colorShift"],
+        "palette": ["#660033", "#330000", "#cc3300"],
+        "paranoia_level": 3,
+        "thought_bubbles": false,
+        "sacred_geometry": true
+      },
+      "narrative_template": {
+        "general": "The forest is inside you. You are shown everything you have avoided knowing. There is no shortcut through the ceremony."
+      },
+      "connections": {
+        "tarot": "Five of Cups",
+        "suit": "Cups"
+      }
+    },
+    "ibogaine": {
+      "slug": "ibogaine",
+      "name": "Ibogaine",
+      "category": "entheogen",
+      "intensity": 9,
+      "effects_summary": "Isolated iboga alkaloid used for addiction interruption. Produces terrifying clarity about every decision you have made.",
+      "visual_profile": {
+        "base_effects": ["breathingWarp", "mandala", "thoughtBubbles", "colorShift"],
+        "palette": ["#990033", "#660000", "#cc3300"],
+        "paranoia_level": 3,
+        "thought_bubbles": true,
+        "sacred_geometry": true
+      },
+      "narrative_template": {
+        "general": "The drug shows you the drug. Then it shows you why. Then it shows you what you were before the why. You have 30 hours."
+      },
+      "connections": {
+        "tarot": "The Hierophant",
+        "suit": "Major Arcana"
+      }
+    },
+    "iproniazid": {
+      "slug": "iproniazid",
+      "name": "Iproniazid",
+      "category": "other",
+      "intensity": 4,
+      "effects_summary": "First MAOI antidepressant, discovered accidentally from tuberculosis treatment. Raises serotonin slowly, powerfully, and dangerously if combined incorrectly.",
+      "visual_profile": {
+        "base_effects": ["colorShift", "auraBreathing"],
+        "palette": ["#9966cc", "#6633cc", "#cc99ff"],
+        "paranoia_level": 2,
+        "thought_bubbles": false,
+        "sacred_geometry": false
+      },
+      "narrative_template": {
+        "general": "The grey thins. Not all at once — over weeks, the light changes. You remember you were capable of this."
+      },
+      "connections": {
+        "tarot": "Nine of Swords",
+        "suit": "Swords"
+      }
+    },
+    "kava": {
+      "slug": "kava",
+      "name": "Kava",
+      "category": "depressant",
+      "intensity": 3,
+      "effects_summary": "Pacific island root producing muscular relaxation and mild euphoria without cognitive impairment. The Pentacles rest easy.",
+      "visual_profile": {
+        "base_effects": ["gravitySag", "chillFume", "amberVignette"],
+        "palette": ["#996600", "#cc9933", "#ffcc66"],
+        "paranoia_level": 1,
+        "thought_bubbles": false,
+        "sacred_geometry": false
+      },
+      "narrative_template": {
+        "general": "Your muscles become water. Social fear dissolves. The ceremony circle has always been safe. You remember this."
+      },
+      "connections": {
+        "tarot": "Seven of Pentacles",
+        "suit": "Pentacles"
+      }
+    },
+    "ketamine": {
+      "slug": "ketamine",
+      "name": "Ketamine",
+      "category": "dissociative",
+      "intensity": 8,
+      "effects_summary": "Anesthetic dissociative producing the K-hole — complete ego dissolution into grey geometric space. You leave your body and watch it from the ceiling.",
+      "visual_profile": {
+        "base_effects": ["gravitySag", "tunnelVortex", "shadowFigures", "eyeDilation"],
+        "palette": ["#cccccc", "#999999", "#666666"],
+        "paranoia_level": 2,
+        "thought_bubbles": false,
+        "sacred_geometry": false
+      },
+      "narrative_template": {
+        "general": "You are watching yourself from a great distance. The body is doing something. You will return to it eventually."
+      },
+      "connections": {
+        "tarot": "Death",
+        "suit": "Major Arcana"
+      }
+    },
+    "khat": {
+      "slug": "khat",
+      "name": "Khat",
+      "category": "stimulant",
+      "intensity": 4,
+      "effects_summary": "Flowering plant chewed in Yemen and East Africa for stimulation, sociality, and communal endurance. Slow burn. Used since antiquity.",
+      "visual_profile": {
+        "base_effects": ["colorShift", "auraBreathing"],
+        "palette": ["#669933", "#336600", "#99cc33"],
+        "paranoia_level": 2,
+        "thought_bubbles": false,
+        "sacred_geometry": false
+      },
+      "narrative_template": {
+        "general": "The circle chews and talks. Hours pass. The green loosens your tongue and steadies your mind."
+      },
+      "connections": {
+        "tarot": "Strength",
+        "suit": "Major Arcana"
+      }
+    },
+    "kratom": {
+      "slug": "kratom",
+      "name": "Kratom",
+      "category": "depressant",
+      "intensity": 4,
+      "effects_summary": "Southeast Asian leaf with dose-dependent effects: stimulant at low dose, opioid-like sedation at high dose. Walks both sides of the boundary.",
+      "visual_profile": {
+        "base_effects": ["gravitySag", "colorShift", "chillFume"],
+        "palette": ["#336600", "#663300", "#996633"],
+        "paranoia_level": 1,
+        "thought_bubbles": false,
+        "sacred_geometry": false
+      },
+      "narrative_template": {
+        "general": "A warm tide. Whether it lifts you or draws you down depends entirely on the measure. The leaf is listening."
+      },
+      "connections": {
+        "tarot": "Five of Pentacles",
+        "suit": "Pentacles"
+      }
+    },
+    "kwao krua": {
+      "slug": "kwao krua",
+      "name": "Kwao Krua",
+      "category": "other",
+      "intensity": 3,
+      "effects_summary": "Thai phytoestrogen plant used for feminisation and longevity. Slow hormonal alchemy through botanical channels.",
+      "visual_profile": {
+        "base_effects": ["chillFume", "rippleWaves"],
+        "palette": ["#ffaacc", "#cc88aa", "#ff99bb"],
+        "paranoia_level": 1,
+        "thought_bubbles": false,
+        "sacred_geometry": false
+      },
+      "narrative_template": {
+        "general": "The plant rearranges what was already trying to change. Time is the active ingredient. You are its patient."
+      },
+      "connections": {
+        "tarot": "Nine of Cups",
+        "suit": "Cups"
+      }
+    },
+    "kykeon": {
+      "slug": "kykeon",
+      "name": "Kykeon",
+      "category": "entheogen",
+      "intensity": 8,
+      "effects_summary": "Mystery beverage of the Eleusinian Mysteries. Possibly ergotised barley — proto-LSD consumed by Plato, Aristotle, and 10,000 initiates who never spoke of it.",
+      "visual_profile": {
+        "base_effects": ["colorShift", "breathingWarp", "mandala", "auraBreathing"],
+        "palette": ["#ccaa00", "#ffeeaa", "#aa8800"],
+        "paranoia_level": 2,
+        "thought_bubbles": false,
+        "sacred_geometry": true
+      },
+      "narrative_template": {
+        "general": "This is what Plato saw. The eternal forms behind the shadow play. Philosophy was never the same after this cup."
+      },
+      "connections": {
+        "tarot": "The World",
+        "suit": "Major Arcana"
+      }
+    },
+    "lamotrigine": {
+      "slug": "lamotrigine",
+      "name": "Lamotrigine",
+      "category": "adaptogen",
+      "intensity": 2,
+      "effects_summary": "Anticonvulsant mood stabilizer used for bipolar disorder. Smooths the amplitude without eliminating the signal.",
+      "visual_profile": {
+        "base_effects": ["auraBreathing", "chillFume"],
+        "palette": ["#6699cc", "#3366cc", "#99ccff"],
+        "paranoia_level": 1,
+        "thought_bubbles": false,
+        "sacred_geometry": false
+      },
+      "narrative_template": {
+        "general": "The sharp edges of the world are slightly further away than usual. This is medical. This is survival. This is enough."
+      },
+      "connections": {
+        "tarot": "Four of Swords",
+        "suit": "Swords"
+      }
+    },
+    "lithium": {
+      "slug": "lithium",
+      "name": "Lithium",
+      "category": "adaptogen",
+      "intensity": 2,
+      "effects_summary": "The oldest mood stabilizer. A simple metal ion. Poets have taken it. What remained was still worth reading.",
+      "visual_profile": {
+        "base_effects": ["auraBreathing", "colorShift"],
+        "palette": ["#ccccff", "#9999cc", "#6666aa"],
+        "paranoia_level": 1,
+        "thought_bubbles": false,
+        "sacred_geometry": false
+      },
+      "narrative_template": {
+        "general": "The peaks no longer reach the stratosphere. The valleys are survivable. You call this flat. Others call it living."
+      },
+      "connections": {
+        "tarot": "Five of Swords",
+        "suit": "Swords"
+      }
+    },
+    "m-cat": {
+      "slug": "m-cat",
+      "name": "M-Cat",
+      "category": "stimulant",
+      "intensity": 7,
+      "effects_summary": "Mephedrone — synthetic cathinone producing intense stimulation, empathic waves, and compulsive redosing logic. The warehouse experience.",
+      "visual_profile": {
+        "base_effects": ["colorShift", "chromaticAberration", "auraBreathing"],
+        "palette": ["#ff6699", "#ff3366", "#cc0066"],
+        "paranoia_level": 3,
+        "thought_bubbles": true,
+        "sacred_geometry": false
+      },
+      "narrative_template": {
+        "general": "Electric warmth floods the jaw. The music becomes urgent. You will absolutely not take another one."
+      },
+      "connections": {
+        "tarot": "Ten of Wands",
+        "suit": "Wands"
+      }
+    },
+    "mandrake": {
+      "slug": "mandrake",
+      "name": "Mandrake",
+      "category": "deliriant",
+      "intensity": 7,
+      "effects_summary": "Tropane alkaloid root used in medieval witchcraft and Arab magic. Induces trance, hallucination, and the sensation that the root screams when pulled.",
+      "visual_profile": {
+        "base_effects": ["shadowFigures", "breathingWarp", "thoughtBubbles", "eyeDilation"],
+        "palette": ["#330000", "#660033", "#990066"],
+        "paranoia_level": 4,
+        "thought_bubbles": true,
+        "sacred_geometry": false
+      },
+      "narrative_template": {
+        "general": "The root has a face. You are becoming the forest it came from. Do not follow the figure at the edge of the clearing."
+      },
+      "connections": {
+        "tarot": "King of Swords",
+        "suit": "Swords"
+      }
+    },
+    "mda": {
+      "slug": "mda",
+      "name": "MDA",
+      "category": "empathogen",
+      "intensity": 8,
+      "effects_summary": "The love drug before MDMA. More psychedelic, more introspective, longer. Visuals appear. Warm empathy coexists with genuine insight.",
+      "visual_profile": {
+        "base_effects": ["colorShift", "rippleWaves", "auraBreathing", "breathingWarp"],
+        "palette": ["#ff66cc", "#cc33aa", "#ff99dd"],
+        "paranoia_level": 2,
+        "thought_bubbles": false,
+        "sacred_geometry": true
+      },
+      "narrative_template": {
+        "general": "Love is the operating frequency. Your history with everyone you love reshuffles itself into something forgivable."
+      },
+      "connections": {
+        "tarot": "The Empress",
+        "suit": "Major Arcana"
+      }
+    },
+    "mdma": {
+      "slug": "mdma",
+      "name": "MDMA",
+      "category": "empathogen",
+      "intensity": 7,
+      "effects_summary": "The empathogen. Rose aura, ripple waves, no paranoia base. The dancefloor becomes a single organism of shared warmth.",
+      "visual_profile": {
+        "base_effects": ["rippleWaves", "auraBreathing", "colorShift"],
+        "palette": ["#ff99aa", "#ff6688", "#ff3366"],
+        "paranoia_level": 1,
+        "thought_bubbles": false,
+        "sacred_geometry": false
+      },
+      "narrative_template": {
+        "general": "Your chest is warm. The music is inside you. Everyone here is your family. You are certain of this."
+      },
+      "connections": {
+        "tarot": "The Lovers",
+        "suit": "Major Arcana"
+      }
+    },
+    "methamphetamine": {
+      "slug": "methamphetamine",
+      "name": "Methamphetamine",
+      "category": "stimulant",
+      "intensity": 9,
+      "effects_summary": "Highly addictive synthetic stimulant. Paranoia, shadow figures, red-black aesthetics. The Devil's bargain — ecstasy that costs exactly everything.",
+      "visual_profile": {
+        "base_effects": ["colorShift", "shadowFigures", "thoughtBubbles", "chromaticAberration"],
+        "palette": ["#cc0000", "#330000", "#ff3300"],
+        "paranoia_level": 5,
+        "thought_bubbles": true,
+        "sacred_geometry": false
+      },
+      "narrative_template": {
+        "general": "The shadows at the window have shapes. Something has been watching you specifically. The peak was twelve hours ago."
+      },
+      "connections": {
+        "tarot": "The Devil",
+        "suit": "Major Arcana"
+      }
+    },
+    "mimosa tenuiflora": {
+      "slug": "mimosa tenuiflora",
+      "name": "Mimosa Tenuiflora",
+      "category": "entheogen",
+      "intensity": 9,
+      "effects_summary": "DMT-containing bark used in Amazonian ayahuasca preparation. Maximum visual chaos, sacred geometry, jungle green.",
+      "visual_profile": {
+        "base_effects": ["colorShift", "mandala", "breathingWarp", "chromaticAberration"],
+        "palette": ["#339933", "#006600", "#00cc00"],
+        "paranoia_level": 3,
+        "thought_bubbles": false,
+        "sacred_geometry": true
+      },
+      "narrative_template": {
+        "general": "Green fractals bloom from the inside of your eyelids. The jungle does not permit spectators."
+      },
+      "connections": {
+        "tarot": "Three of Cups",
+        "suit": "Cups"
+      }
+    },
+    "mmda": {
+      "slug": "mmda",
+      "name": "MMDA",
+      "category": "psychedelic",
+      "intensity": 7,
+      "effects_summary": "Methylenedioxyamphetamine — amphetamine with psychedelic properties. Rare and strange. Produces visions and abstract emotional clarity.",
+      "visual_profile": {
+        "base_effects": ["colorShift", "breathingWarp", "rippleWaves"],
+        "palette": ["#9966ff", "#6633cc", "#cc99ff"],
+        "paranoia_level": 2,
+        "thought_bubbles": false,
+        "sacred_geometry": false
+      },
+      "narrative_template": {
+        "general": "Something abstract and true is surfacing. You cannot say what it is yet but you feel it approaching with confidence."
+      },
+      "connections": {
+        "tarot": "Knight of Cups",
+        "suit": "Cups"
+      }
+    },
+    "morphine": {
+      "slug": "morphine",
+      "name": "Morphine",
+      "category": "depressant",
+      "intensity": 7,
+      "effects_summary": "The opium alkaloid that made modern medicine possible and ended more lives than any war. Warm, nodding, painless. The Pentacle's dark side.",
+      "visual_profile": {
+        "base_effects": ["gravitySag", "amberVignette", "eyeDilation"],
+        "palette": ["#996633", "#663300", "#cc9966"],
+        "paranoia_level": 1,
+        "thought_bubbles": false,
+        "sacred_geometry": false
+      },
+      "narrative_template": {
+        "general": "Pain is a distant concept belonging to someone else. You are very warm. The river is carrying you somewhere soft."
+      },
+      "connections": {
+        "tarot": "Four of Pentacles",
+        "suit": "Pentacles"
+      }
+    },
+    "nicotine": {
+      "slug": "nicotine",
+      "name": "Nicotine",
+      "category": "stimulant",
+      "intensity": 3,
+      "effects_summary": "The world's most ubiquitous psychoactive. Rapid absorption, brief clarity, immediate craving. The habit that survived modernity.",
+      "visual_profile": {
+        "base_effects": ["colorShift", "chillFume"],
+        "palette": ["#cccc99", "#999966", "#666633"],
+        "paranoia_level": 1,
+        "thought_bubbles": false,
+        "sacred_geometry": false
+      },
+      "narrative_template": {
+        "general": "A momentary lucidity. The smoke circles upward. You have 7 minutes of calm that you earned precisely one cigarette at a time."
+      },
+      "connections": {
+        "tarot": "Four of Wands",
+        "suit": "Wands"
+      }
+    },
+    "nos": {
+      "slug": "nos",
+      "name": "NOS",
+      "category": "dissociative",
+      "intensity": 5,
+      "effects_summary": "Nitrous oxide. 90-second dissociation. The world becomes a wub-wub-wub tunnel. It is exactly as silly as it sounds and also briefly transcendent.",
+      "visual_profile": {
+        "base_effects": ["tunnelVortex", "colorShift", "gravitySag"],
+        "palette": ["#ccccff", "#9999ff", "#ffffff"],
+        "paranoia_level": 1,
+        "thought_bubbles": false,
+        "sacred_geometry": false
+      },
+      "narrative_template": {
+        "general": "The music slow-warps into the void. Everything is wuuuUUUUuuu. Reality snaps back with a click. You are fine. Next balloon?"
+      },
+      "connections": {
+        "tarot": "Ace of Swords",
+        "suit": "Swords"
+      }
+    },
+    "nutmeg": {
+      "slug": "nutmeg",
+      "name": "Nutmeg",
+      "category": "psychedelic",
+      "intensity": 5,
+      "effects_summary": "Myristicin-containing spice used in dangerous quantities. Dream visions, slow warp, and lasting confusion. The Moon disorients without illuminating.",
+      "visual_profile": {
+        "base_effects": ["breathingWarp", "colorShift", "amberVignette"],
+        "palette": ["#cc6600", "#993300", "#ff9933"],
+        "paranoia_level": 3,
+        "thought_bubbles": true,
+        "sacred_geometry": false
+      },
+      "narrative_template": {
+        "general": "Twelve hours in you are not sure when this started. The kitchen has a different quality. Your spice rack was a warning."
+      },
+      "connections": {
+        "tarot": "The Moon",
+        "suit": "Major Arcana"
+      }
+    },
+    "nymphaea caerulea": {
+      "slug": "nymphaea caerulea",
+      "name": "Nymphaea Caerulea",
+      "category": "entheogen",
+      "intensity": 5,
+      "effects_summary": "Blue Egyptian water lily. Sacred to ancient Egypt. Produces dreamy, sensual altered states and mild visual distortion.",
+      "visual_profile": {
+        "base_effects": ["colorShift", "rippleWaves", "auraBreathing"],
+        "palette": ["#3366cc", "#6699ff", "#99bbff"],
+        "paranoia_level": 1,
+        "thought_bubbles": false,
+        "sacred_geometry": true
+      },
+      "narrative_template": {
+        "general": "The blue lotus opens inside you. Egypt is very old and so is this feeling. You float on sacred water."
+      },
+      "connections": {
+        "tarot": "The High Priestess",
+        "suit": "Major Arcana"
+      }
+    },
+    "ololiuqui": {
+      "slug": "ololiuqui",
+      "name": "Ololiuqui",
+      "category": "psychedelic",
+      "intensity": 7,
+      "effects_summary": "Morning glory seeds containing LSA — the Aztec sacrament. Slower and heavier than LSD, with dark introspective undertones.",
+      "visual_profile": {
+        "base_effects": ["colorShift", "breathingWarp", "thoughtBubbles"],
+        "palette": ["#660099", "#330066", "#9933cc"],
+        "paranoia_level": 3,
+        "thought_bubbles": true,
+        "sacred_geometry": true
+      },
+      "narrative_template": {
+        "general": "The ancient seed opens inside you. The Aztec night sky rotates above the pyramid. You understand the calendar now."
+      },
+      "connections": {
+        "tarot": "Queen of Cups",
+        "suit": "Cups"
+      }
+    },
+    "opium": {
+      "slug": "opium",
+      "name": "Opium",
+      "category": "depressant",
+      "intensity": 7,
+      "effects_summary": "The raw poppy sap. The substance of Coleridge and De Quincey and the British Empire. Dreams within dreams, heavy as mud.",
+      "visual_profile": {
+        "base_effects": ["gravitySag", "amberVignette", "breathingWarp"],
+        "palette": ["#993300", "#663300", "#cc6633"],
+        "paranoia_level": 1,
+        "thought_bubbles": false,
+        "sacred_geometry": false
+      },
+      "narrative_template": {
+        "general": "The world liquefies at the edges. You are writing the poem you always meant to write. Tomorrow you will try again."
+      },
+      "connections": {
+        "tarot": "Three of Pentacles",
+        "suit": "Pentacles"
+      }
+    },
+    "piracetam": {
+      "slug": "piracetam",
+      "name": "Piracetam",
+      "category": "adaptogen",
+      "intensity": 2,
+      "effects_summary": "First synthetic nootropic (racetam class). Subtle cognitive enhancement — thoughts arrive slightly faster and connect with less friction.",
+      "visual_profile": {
+        "base_effects": ["auraBreathing", "colorShift"],
+        "palette": ["#99ccff", "#6699cc", "#3366aa"],
+        "paranoia_level": 1,
+        "thought_bubbles": false,
+        "sacred_geometry": false
+      },
+      "narrative_template": {
+        "general": "A mild cognitive tailwind. Your sentences complete themselves more efficiently. The cypherpunk approved of this."
+      },
+      "connections": {
+        "tarot": "Seven of Swords",
+        "suit": "Swords"
+      }
+    },
+    "pituri": {
+      "slug": "pituri",
+      "name": "Pituri",
+      "category": "stimulant",
+      "intensity": 4,
+      "effects_summary": "Australian indigenous chewing plant containing nicotine and anabasine. Used for ceremonies, long journeys, and endurance across the desert.",
+      "visual_profile": {
+        "base_effects": ["colorShift", "auraBreathing"],
+        "palette": ["#cc9933", "#996600", "#ffcc66"],
+        "paranoia_level": 1,
+        "thought_bubbles": false,
+        "sacred_geometry": false
+      },
+      "narrative_template": {
+        "general": "The desert doesn't wait for you to be ready. The plant knows this. You chew and walk on."
+      },
+      "connections": {
+        "tarot": "Eight of Wands",
+        "suit": "Wands"
+      }
+    },
+    "poppers": {
+      "slug": "poppers",
+      "name": "Poppers",
+      "category": "other",
+      "intensity": 4,
+      "effects_summary": "Alkyl nitrites. 90-second rush of blood vessel dilation, head-swimming euphoria, and a rainbow flash across the dancefloor. Queer history is encoded in this bottle.",
+      "visual_profile": {
+        "base_effects": ["colorShift", "auraBreathing", "rippleWaves"],
+        "palette": ["#ff0000", "#ff6600", "#ffff00", "#00ff00", "#0000ff", "#9900cc"],
+        "paranoia_level": 1,
+        "thought_bubbles": false,
+        "sacred_geometry": false
+      },
+      "narrative_template": {
+        "general": "The rainbow hits. Your veins are a dancefloor. Stonewall is in this molecule. You know it when you feel it."
+      },
+      "connections": {
+        "tarot": "Page of Wands",
+        "suit": "Wands"
+      }
+    },
+    "psilacetin": {
+      "slug": "psilacetin",
+      "name": "Psilacetin",
+      "category": "psychedelic",
+      "intensity": 8,
+      "effects_summary": "4-AcO-DMT — synthetic prodrug of psilocin. Chemically elegant, smoother than mushrooms, same depth. Maximum chromatic aberration.",
+      "visual_profile": {
+        "base_effects": ["colorShift", "breathingWarp", "chromaticAberration", "mandala"],
+        "palette": ["#9900ff", "#6600cc", "#cc00ff"],
+        "paranoia_level": 3,
+        "thought_bubbles": true,
+        "sacred_geometry": true
+      },
+      "narrative_template": {
+        "general": "The geometry is precise. Each pattern fits inside the next with mathematical intention. Someone or something designed this."
+      },
+      "connections": {
+        "tarot": "Queen of Pentacles",
+        "suit": "Pentacles"
+      }
+    },
+    "psilocybin mushrooms": {
+      "slug": "psilocybin mushrooms",
+      "name": "Psilocybin Mushrooms",
+      "category": "psychedelic",
+      "intensity": 9,
+      "effects_summary": "The oldest known sacrament. Produces wonder, ego dissolution, visual fractals, and the overwhelming sense that everything is going to be okay.",
+      "visual_profile": {
+        "base_effects": ["colorShift", "breathingWarp", "mandala", "thoughtBubbles", "chromaticAberration"],
+        "palette": ["#9933ff", "#cc66ff", "#ff99ff"],
+        "paranoia_level": 2,
+        "thought_bubbles": true,
+        "sacred_geometry": true
+      },
+      "narrative_template": {
+        "general": "The ceiling breathes. Everything is made of golden light. You are exactly where you are supposed to be. This has always been the case."
+      },
+      "connections": {
+        "tarot": "The Star",
+        "suit": "Major Arcana"
+      }
+    },
+    "psychotria viridis": {
+      "slug": "psychotria viridis",
+      "name": "Psychotria Viridis",
+      "category": "entheogen",
+      "intensity": 9,
+      "effects_summary": "The chacruna leaf — DMT plant component of ayahuasca. Beautiful, dangerous, sacred. Jungle fractals and ancestral communication.",
+      "visual_profile": {
+        "base_effects": ["colorShift", "mandala", "breathingWarp", "rippleWaves"],
+        "palette": ["#00cc66", "#009933", "#66ff33"],
+        "paranoia_level": 3,
+        "thought_bubbles": false,
+        "sacred_geometry": true
+      },
+      "narrative_template": {
+        "general": "Green light through jungle canopy. The leaf has been waiting for exactly this ceremony. Your ancestors are present and have notes."
+      },
+      "connections": {
+        "tarot": "Four of Cups",
+        "suit": "Cups"
+      }
+    },
+    "sakae na": {
+      "slug": "sakae na",
+      "name": "Sakae Na",
+      "category": "stimulant",
+      "intensity": 3,
+      "effects_summary": "Southeast Asian plant (Combretum quadrangulare) with mild stimulant and euphoric properties. Regional cousin of kratom.",
+      "visual_profile": {
+        "base_effects": ["colorShift", "chillFume"],
+        "palette": ["#99cc66", "#669933", "#ccff99"],
+        "paranoia_level": 1,
+        "thought_bubbles": false,
+        "sacred_geometry": false
+      },
+      "narrative_template": {
+        "general": "A light wash of warmth. Not demanding. The plant offers what the region has always offered — gentle endurance."
+      },
+      "connections": {
+        "tarot": "King of Wands",
+        "suit": "Wands"
+      }
+    },
+    "sassafras": {
+      "slug": "sassafras",
+      "name": "Sassafras",
+      "category": "empathogen",
+      "intensity": 5,
+      "effects_summary": "Safrole-containing root bark used as MDMA precursor. Mild empathogenic effects in raw form. Native American sacred plant.",
+      "visual_profile": {
+        "base_effects": ["colorShift", "rippleWaves", "auraBreathing"],
+        "palette": ["#cc6600", "#996633", "#ffaa44"],
+        "paranoia_level": 1,
+        "thought_bubbles": false,
+        "sacred_geometry": false
+      },
+      "narrative_template": {
+        "general": "Root medicine. Warm and social and older than the category they put it in. The forest offered this before the lab did."
+      },
+      "connections": {
+        "tarot": "King of Cups",
+        "suit": "Cups"
+      }
+    },
+    "scopolamine": {
+      "slug": "scopolamine",
+      "name": "Scopolamine",
+      "category": "deliriant",
+      "intensity": 7,
+      "effects_summary": "Tropane alkaloid used in motion sickness patches and in Colombian criminal practice. Produces complete suggestibility and total amnesia.",
+      "visual_profile": {
+        "base_effects": ["thoughtBubbles", "shadowFigures", "eyeDilation", "breathingWarp"],
+        "palette": ["#330066", "#220044", "#660099"],
+        "paranoia_level": 5,
+        "thought_bubbles": true,
+        "sacred_geometry": false
+      },
+      "narrative_template": {
+        "general": "You will do what you are told and remember nothing. The tropane alkaloid has no opinion about your preferences."
+      },
+      "connections": {
+        "tarot": "Three of Swords",
+        "suit": "Swords"
+      }
+    },
+    "sertraline": {
+      "slug": "sertraline",
+      "name": "Sertraline",
+      "category": "adaptogen",
+      "intensity": 2,
+      "effects_summary": "SSRI antidepressant (Zoloft). Slow serotonin accumulation over weeks. Not a party drug — this is maintenance medicine for the long game.",
+      "visual_profile": {
+        "base_effects": ["auraBreathing", "chillFume"],
+        "palette": ["#6699cc", "#9999cc", "#ccccff"],
+        "paranoia_level": 1,
+        "thought_bubbles": false,
+        "sacred_geometry": false
+      },
+      "narrative_template": {
+        "general": "You took this every day for four months and then someone made a joke and you actually laughed. That was the sign."
+      },
+      "connections": {
+        "tarot": "Justice",
+        "suit": "Major Arcana"
+      }
+    },
+    "shroom tea": {
+      "slug": "shroom tea",
+      "name": "Shroom Tea",
+      "category": "psychedelic",
+      "intensity": 8,
+      "effects_summary": "Psilocybin mushroom infusion — faster onset, nausea-reduced, same depth. The ceremony vessel changes the relationship with the medicine.",
+      "visual_profile": {
+        "base_effects": ["colorShift", "breathingWarp", "mandala", "rippleWaves"],
+        "palette": ["#996699", "#cc99cc", "#ffccff"],
+        "paranoia_level": 2,
+        "thought_bubbles": true,
+        "sacred_geometry": true
+      },
+      "narrative_template": {
+        "general": "The warm cup. The steam. Then the floor breathes and the walls decide to show you something you've been avoiding."
+      },
+      "connections": {
+        "tarot": "Page of Cups",
+        "suit": "Cups"
+      }
+    },
+    "sildenafil": {
+      "slug": "sildenafil",
+      "name": "Sildenafil",
+      "category": "other",
+      "intensity": 3,
+      "effects_summary": "Erectile dysfunction medication (Viagra). Vasodilator producing flushing, visual blue tinge, and the confidence of pharmaceutical certainty.",
+      "visual_profile": {
+        "base_effects": ["colorShift", "auraBreathing"],
+        "palette": ["#0099cc", "#66ccff", "#3366ff"],
+        "paranoia_level": 1,
+        "thought_bubbles": false,
+        "sacred_geometry": false
+      },
+      "narrative_template": {
+        "general": "Everything takes on a subtle blue haze. This was discovered by accident in 1989. So was penicillin."
+      },
+      "connections": {
+        "tarot": "Knight of Wands",
+        "suit": "Wands"
+      }
+    },
+    "sober": {
+      "slug": "sober",
+      "name": "Sober",
+      "category": "adaptogen",
+      "intensity": 1,
+      "effects_summary": "The most radical choice in certain rooms. Complete presence. You feel everything exactly as it is. This is its own altered state.",
+      "visual_profile": {
+        "base_effects": ["auraBreathing", "chillFume"],
+        "palette": ["#ffffff", "#f0f0f0", "#e0e0e0"],
+        "paranoia_level": 1,
+        "thought_bubbles": false,
+        "sacred_geometry": false
+      },
+      "narrative_template": {
+        "general": "You see all of it with no filter. The music is real. The people are real. So is the next morning. This is Temperance."
+      },
+      "connections": {
+        "tarot": "Temperance",
+        "suit": "Major Arcana"
+      }
+    },
+    "st. john's wort": {
+      "slug": "st. john's wort",
+      "name": "St. John's Wort",
+      "category": "adaptogen",
+      "intensity": 2,
+      "effects_summary": "Gentle botanical MAOI and serotonin modulator. Slower than pharmaceuticals. The herb that made some poets function in summer.",
+      "visual_profile": {
+        "base_effects": ["chillFume", "colorShift"],
+        "palette": ["#ffcc00", "#ffee66", "#cc9900"],
+        "paranoia_level": 1,
+        "thought_bubbles": false,
+        "sacred_geometry": false
+      },
+      "narrative_template": {
+        "general": "Yellow flowers in the sunshine. The grey lifts by degrees, like clouds after rain. You have been here before — summer of three years ago."
+      },
+      "connections": {
+        "tarot": "Six of Swords",
+        "suit": "Swords"
+      }
+    },
+    "sugarcane": {
+      "slug": "sugarcane",
+      "name": "Sugarcane",
+      "category": "other",
+      "intensity": 2,
+      "effects_summary": "Raw glucose — the sweetness that fueled empire and slavery. Sugar is the most globally consumed psychoactive. The Pentacle's most honest expression.",
+      "visual_profile": {
+        "base_effects": ["colorShift", "chillFume"],
+        "palette": ["#ffeecc", "#ffcc66", "#ffaa00"],
+        "paranoia_level": 1,
+        "thought_bubbles": false,
+        "sacred_geometry": false
+      },
+      "narrative_template": {
+        "general": "Sweetness hits the tongue first, then the blood. A brief, honest warmth. The simplest molecule with the longest shadow."
+      },
+      "connections": {
+        "tarot": "Page of Pentacles",
+        "suit": "Pentacles"
+      }
+    },
+    "syrian rue": {
+      "slug": "syrian rue",
+      "name": "Syrian Rue",
+      "category": "entheogen",
+      "intensity": 7,
+      "effects_summary": "MAOI seeds used in ancient Middle East and Persia. Potentiates other substances and produces visionary states alone at high dose.",
+      "visual_profile": {
+        "base_effects": ["colorShift", "breathingWarp", "rippleWaves", "auraBreathing"],
+        "palette": ["#cc3300", "#ff6600", "#ffcc00"],
+        "paranoia_level": 3,
+        "thought_bubbles": false,
+        "sacred_geometry": true
+      },
+      "narrative_template": {
+        "general": "The gate opens between what you swallow and what you were meant to experience. Old medicine in old desert light."
+      },
+      "connections": {
+        "tarot": "King of Pentacles",
+        "suit": "Pentacles"
+      }
+    },
+    "tabernaemontana": {
+      "slug": "tabernaemontana",
+      "name": "Tabernaemontana",
+      "category": "entheogen",
+      "intensity": 8,
+      "effects_summary": "African shrub with iboga-like alkaloids. Used in Bwiti initiation. The forest has always known what the laboratory is still learning.",
+      "visual_profile": {
+        "base_effects": ["breathingWarp", "colorShift", "mandala"],
+        "palette": ["#336633", "#663300", "#cc6600"],
+        "paranoia_level": 2,
+        "thought_bubbles": false,
+        "sacred_geometry": true
+      },
+      "narrative_template": {
+        "general": "The initiation begins in the forest before the ceremony. You have not yet begun and you are already changed."
+      },
+      "connections": {
+        "tarot": "Six of Cups",
+        "suit": "Cups"
+      }
+    },
+    "tea": {
+      "slug": "tea",
+      "name": "Tea",
+      "category": "stimulant",
+      "intensity": 2,
+      "effects_summary": "L-theanine and caffeine in elegant balance. Civilization's most persistent ritual. The clarity is softer than coffee. The pause is deliberate.",
+      "visual_profile": {
+        "base_effects": ["colorShift", "chillFume"],
+        "palette": ["#ccaa66", "#99774d", "#ffddaa"],
+        "paranoia_level": 1,
+        "thought_bubbles": false,
+        "sacred_geometry": false
+      },
+      "narrative_template": {
+        "general": "The steam rises. The mind settles. Ten thousand years of ritual in a ceramic cup. This pause was planned."
+      },
+      "connections": {
+        "tarot": "Three of Wands",
+        "suit": "Wands"
+      }
+    },
+    "testosterone": {
+      "slug": "testosterone",
+      "name": "Testosterone",
+      "category": "other",
+      "intensity": 4,
+      "effects_summary": "Masculinizing hormone producing slow physical and perceptual transformation. The body renegotiates its relationship with the world.",
+      "visual_profile": {
+        "base_effects": ["colorShift", "auraBreathing", "chromaticAberration"],
+        "palette": ["#cc6600", "#ff9900", "#996633"],
+        "paranoia_level": 2,
+        "thought_bubbles": false,
+        "sacred_geometry": false
+      },
+      "narrative_template": {
+        "general": "The voice drops. The hunger sharpens. Months become years become a body that is finally the right size for the soul inside it."
+      },
+      "connections": {
+        "tarot": "Queen of Wands",
+        "suit": "Wands"
+      }
+    },
+    "thc edibles": {
+      "slug": "thc edibles",
+      "name": "THC Edibles",
+      "category": "cannabinoid",
+      "intensity": 6,
+      "effects_summary": "11-hydroxy-THC — the liver's interpretation of cannabis. Slower, deeper, and more committed than smoking. You are in this for several hours.",
+      "visual_profile": {
+        "base_effects": ["breathingWarp", "colorShift", "gravitySag", "thoughtBubbles"],
+        "palette": ["#336600", "#669900", "#99cc33"],
+        "paranoia_level": 3,
+        "thought_bubbles": true,
+        "sacred_geometry": false
+      },
+      "narrative_template": {
+        "general": "It wasn't working. Then it was working. Now it is working very much. The ceiling is a different texture than earlier."
+      },
+      "connections": {
+        "tarot": "Six of Pentacles",
+        "suit": "Pentacles"
+      }
+    },
+    "tobacco": {
+      "slug": "tobacco",
+      "name": "Tobacco",
+      "category": "stimulant",
+      "intensity": 3,
+      "effects_summary": "Sacred plant of the Americas, colonised into commodity. Ceremonially irreplaceable. The smoke carries prayers. The addiction carries everything else.",
+      "visual_profile": {
+        "base_effects": ["colorShift", "chillFume"],
+        "palette": ["#aa8833", "#887733", "#ccaa66"],
+        "paranoia_level": 1,
+        "thought_bubbles": false,
+        "sacred_geometry": false
+      },
+      "narrative_template": {
+        "general": "The smoke circles. Before it was product it was prayer. The sacred plant still remembers what it was before the trade routes."
+      },
+      "connections": {
+        "tarot": "Five of Wands",
+        "suit": "Wands"
+      }
+    },
+    "weed": {
+      "slug": "weed",
+      "name": "Weed",
+      "category": "cannabinoid",
+      "intensity": 4,
+      "effects_summary": "Cannabis — time-distorting, music-deepening, creativity-adjacent. The bong cloud is warm and the couch receives you completely.",
+      "visual_profile": {
+        "base_effects": ["breathingWarp", "colorShift", "chillFume"],
+        "palette": ["#336600", "#669900", "#99cc33"],
+        "paranoia_level": 2,
+        "thought_bubbles": false,
+        "sacred_geometry": false
+      },
+      "narrative_template": {
+        "general": "Time stretches like taffy. The music has detail you missed every previous listen. The snack decision feels extremely important."
+      },
+      "connections": {
+        "tarot": "Ten of Pentacles",
+        "suit": "Pentacles"
+      }
+    },
+    "xanax": {
+      "slug": "xanax",
+      "name": "Xanax",
+      "category": "depressant",
+      "intensity": 5,
+      "effects_summary": "Benzodiazepine anxiolytic producing profound relaxation and the terrifying warmth of borrowed calm. Withdrawal is not a joke.",
+      "visual_profile": {
+        "base_effects": ["gravitySag", "amberVignette", "eyeDilation"],
+        "palette": ["#9999cc", "#6666aa", "#ccccff"],
+        "paranoia_level": 1,
+        "thought_bubbles": false,
+        "sacred_geometry": false
+      },
+      "narrative_template": {
+        "general": "The anxiety is gone. Not managed — gone. You understand now why people take more. You will not take more. You take more."
+      },
+      "connections": {
+        "tarot": "Nine of Pentacles",
+        "suit": "Pentacles"
+      }
+    },
+    "yohimbe": {
+      "slug": "yohimbe",
+      "name": "Yohimbe",
+      "category": "stimulant",
+      "intensity": 5,
+      "effects_summary": "Bark-derived alpha-2 antagonist producing anxiety-adjacent stimulation, aphrodisiac effects, and cardiovascular urgency.",
+      "visual_profile": {
+        "base_effects": ["colorShift", "chromaticAberration", "auraBreathing"],
+        "palette": ["#993300", "#cc3300", "#ff6633"],
+        "paranoia_level": 3,
+        "thought_bubbles": false,
+        "sacred_geometry": false
+      },
+      "narrative_template": {
+        "general": "The heart accelerates. Urgency without direction. The body is preparing for something. You are not sure you agreed to this."
+      },
+      "connections": {
+        "tarot": "Seven of Wands",
+        "suit": "Wands"
+      }
+    }
+  }
+}
