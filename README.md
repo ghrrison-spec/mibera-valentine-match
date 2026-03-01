@@ -9,7 +9,7 @@ Health check: /loa doctor
 Version: 1.36.0
 -->
 
-[![Version](https://img.shields.io/badge/version-1.39.1-blue.svg)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-1.49.0-blue.svg)](CHANGELOG.md)
 [![License](https://img.shields.io/badge/license-AGPL--3.0-green.svg)](LICENSE.md)
 [![Release](https://img.shields.io/badge/release-Post--Merge%20Automation-purple.svg)](CHANGELOG.md#1360---2026-02-13)
 
@@ -21,15 +21,18 @@ Loa is an agent-driven development framework for [Claude Code](https://docs.anth
 
 ### Why "Loa"?
 
-In William Gibson's Sprawl trilogy, Loa are AI entities that "ride" humans through neural interfaces. These agents don't replace you—they **ride with you**, channeling expertise through the interface.
+In William Gibson's Sprawl trilogy (*Neuromancer*, *Count Zero*), Loa are AI entities that "ride" humans through neural interfaces — a metaphor Gibson adapted from Haitian Vodou via the anthropological work of Robert Tallant and (likely) Maya Deren. These agents don't replace you — they **ride with you**, channeling expertise through the interface. See [docs/ecosystem-architecture.md](docs/ecosystem-architecture.md#naming--the-scholarly-chain) for the full naming lineage.
 
 ## Quick Start (~2 minutes)
 
 **Prerequisites**: [Claude Code](https://docs.anthropic.com/en/docs/claude-code/overview) (Anthropic's CLI for Claude), Git, jq, [yq v4+](https://github.com/mikefarah/yq). See **[INSTALLATION.md](INSTALLATION.md)** for full details.
 
 ```bash
-# Install (one command, any existing repo)
+# Install (one command, any existing repo — adds Loa as git submodule)
 curl -fsSL https://raw.githubusercontent.com/0xHoneyJar/loa/main/.claude/scripts/mount-loa.sh | bash
+
+# Or pin to a specific version
+curl -fsSL https://raw.githubusercontent.com/0xHoneyJar/loa/main/.claude/scripts/mount-loa.sh | bash -s -- --tag v1.39.0
 
 # Start Claude Code
 claude
@@ -42,11 +45,13 @@ claude
 /ship      # Deploy and archive
 ```
 
-After install, you should see a `.claude/` directory, `grimoires/loa/`, and `.loa.config.yaml` in your repo. Run `/loa doctor` inside Claude Code to verify everything is healthy.
+After install, you should see `.loa/` (submodule), `.claude/` (symlinks), `grimoires/loa/`, and `.loa.config.yaml` in your repo. Run `/loa doctor` inside Claude Code to verify everything is healthy.
+
+> **Three ways to install**: Submodule mode (default, recommended for existing projects), clone template (new projects), or vendored mode (legacy — no symlink support). See **[INSTALLATION.md](INSTALLATION.md#choosing-your-installation-method)** for the full comparison.
 
 Not sure where you are? `/loa` shows your current state, health, and next step.
 
-New project? See **[INSTALLATION.md](INSTALLATION.md)** to clone the template. For detailed setup, optional tools (beads, ck), and configuration, start there too.
+New project? See **[INSTALLATION.md](INSTALLATION.md#method-2-clone-template)** to clone the template. For detailed setup, optional tools (beads, ck), and configuration, start there too.
 
 ## Why Loa?
 

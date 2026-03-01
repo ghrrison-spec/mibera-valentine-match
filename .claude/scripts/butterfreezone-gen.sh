@@ -22,6 +22,7 @@ shopt -s nullglob
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "${SCRIPT_DIR}/compat-lib.sh"
 SCRIPT_VERSION="1.0.0"
 
 # =============================================================================
@@ -342,7 +343,7 @@ detect_input_tier() {
 # =============================================================================
 
 tier2_grep() {
-    LC_ALL=C timeout 30 grep -rn "${EXCLUDE_DIRS[@]}" --max-count=100 "$@" 2>/dev/null \
+    LC_ALL=C run_with_timeout 30 grep -rn "${EXCLUDE_DIRS[@]}" --max-count=100 "$@" 2>/dev/null \
         | sort -t: -k1,1 -k2,2n | head -200 || true
 }
 
@@ -682,6 +683,13 @@ extract_agent_context() {
     fi
     [[ -z "$version" || "$version" == "null" ]] && version="unknown"
 
+    # Installation mode: detect from .loa-version.json (Task 3.4, cycle-035 sprint-3)
+    local install_mode="unknown"
+    if [[ -f ".loa-version.json" ]] && command -v jq &>/dev/null; then
+        install_mode=$(jq -r '.installation_mode // "unknown"' .loa-version.json 2>/dev/null) || true
+    fi
+    [[ -z "$install_mode" || "$install_mode" == "null" ]] && install_mode="unknown"
+
     # Purpose: use shared multi-strategy extraction (SDD §2.6.2)
     purpose=$(extract_project_description)
 
@@ -896,6 +904,7 @@ key_files: ${key_files}
 ${interfaces}
 dependencies: ${deps}${ecosystem_block}${cap_req_block}
 version: ${version}
+installation_mode: ${install_mode}
 trust_level: ${trust_tag}
 -->
 EOF
