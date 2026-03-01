@@ -747,37 +747,36 @@
         selectedMibera = mibera;
         selectedMibera.token_id = String(num);
 
-        renderMiberaCard(mibera, false);
-        showStep(stepTraits);
+        // LOW-011: pre-load image before rendering card, consistent with handleLookup
+        preloadImage(mibera.image, function (ok) {
+          renderMiberaCard(mibera, ok);
+          showStep(stepTraits);
 
-        if (!d || !drugData || !drugData[d]) {
-          // Token only — stop after traits
-          return;
-        }
+          if (!d || !drugData || !drugData[d]) {
+            // Token only — stop after traits
+            return;
+          }
 
-        selectedDrug = drugData[d];
-        showStep(stepDrug);
-        renderDrugList(getAllDrugs());
-        // Reflect selection in list after render
-        setTimeout(function () { selectDrug(d); }, 50);
+          selectedDrug = drugData[d];
+          showStep(stepDrug);
+          renderDrugList(getAllDrugs());
+          // Reflect selection in list after render
+          setTimeout(function () { selectDrug(d); }, 50);
 
-        var validDoses = ["first_time", "experienced", "fuck_me_up"];
-        if (dose && validDoses.indexOf(dose) !== -1) {
-          selectedDose = dose;
-          doseBtns.forEach(function (b) {
-            var match = b.dataset.dose === dose;
-            b.classList.toggle("selected", match);
-            b.setAttribute("aria-pressed", match ? "true" : "false");
-          });
-          showBeginButton();
-
-          // Auto-trigger experience on next tick to let DOM settle
-          setTimeout(function () {
-            preloadImage(mibera.image, function () {
-              beginExperience();
+          var validDoses = ["first_time", "experienced", "fuck_me_up"];
+          if (dose && validDoses.indexOf(dose) !== -1) {
+            selectedDose = dose;
+            doseBtns.forEach(function (b) {
+              var match = b.dataset.dose === dose;
+              b.classList.toggle("selected", match);
+              b.setAttribute("aria-pressed", match ? "true" : "false");
             });
-          }, 200);
-        }
+            showBeginButton();
+
+            // Auto-trigger experience on next tick to let DOM settle
+            setTimeout(beginExperience, 200);
+          }
+        });
       })
       .catch(function () {
         // Deep link failed — silently degrade to clean state
@@ -999,6 +998,7 @@
         return function () { s = (s * 16807 + 7) % 2147483647; return s / 2147483647; };
       }(42));
       ctx.save();
+      ctx.filter = "blur(4px)";  // LOW-010: set once before loop, not per-iteration
       for (var i = 0; i < count; i++) {
         // Anchor figure to edge zone
         var side = Math.floor(rng() * 4);
@@ -1013,7 +1013,6 @@
         var bob = Math.sin(t * (0.3 + rng() * 0.4) + i) * 4 * intensity;
         var alpha = (0.04 + 0.08 * intensity) * (0.6 + 0.4 * Math.abs(Math.sin(t * 0.25 + i)));
         ctx.globalAlpha = alpha;
-        ctx.filter = "blur(4px)";
         ctx.fillStyle = "#050508";
         // Body
         ctx.beginPath();
@@ -1153,6 +1152,8 @@
       this._dtHistory    = [];
       this._dtAvgMs      = 16;
       this._dropCooldown = 0;  // frames before next drop or recover is allowed
+      this._warpBuf      = null;  // MEDIUM-004: reusable pixel buffer for pixelWarp
+      this._warpBufSize  = 0;
 
       var doseIntensity = { first_time: 0.4, experienced: 0.75, fuck_me_up: 1.0 };
       this.intensity = doseIntensity[dose] || 0.75;
@@ -1413,7 +1414,13 @@
       try {
         var imgData = this.ctx.getImageData(0, 0, W, H);
         var src = imgData.data;
-        var out = new Uint8ClampedArray(src.length);
+        // MEDIUM-004: reuse buffer across frames, resize only on canvas dimension change
+        var needed = src.length;
+        if (!this._warpBuf || this._warpBufSize !== needed) {
+          this._warpBuf = new Uint8ClampedArray(needed);
+          this._warpBufSize = needed;
+        }
+        var out = this._warpBuf;
         var amp = Math.round(this.intensity * 8 * Math.abs(Math.sin(this.t * 0.7)));
         for (var y = 0; y < H; y++) {
           var wobble = Math.round(Math.sin(y * 0.08 + this.t * 1.2) * amp);
